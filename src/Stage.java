@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Optional;
 public class Stage {
     Board board;
-    Optional<Piece> selectedPiece;
+    Piece selectedPiece;
     List<Piece> playerPieces; 
     List<Piece> compPieces;
     boolean playAsWhite = true;
@@ -103,17 +103,42 @@ public class Stage {
         for(Piece p: compPieces) {
             p.paint(g);
         }
+        underMouse(g, mouseLoc);
         
-        Optional<Square> underMouse = board.squareAtPoint(mouseLoc);
-        if(underMouse.isPresent()) {
-            Square hoverCell = underMouse.get();
-            
+        
+        
+    }
+    public void underMouse(Graphics g, Point mouseLoc){
+        Optional<Square> underMouseS = board.squareAtPoint(mouseLoc);
+        if(underMouseS.isPresent()) {
+            if(selectedPiece != null){
+                selectedPiece.setPos(new Point(mouseLoc.x - 40, mouseLoc.y - 40));
+            }
+
+            Square hoverCell = underMouseS.get();
+            g.setColor(Color.DARK_GRAY);
             g.drawString(String.valueOf(hoverCell.col) + convertCoord(String.valueOf(hoverCell.row + 1)), 740, 30);
         }
     }
     public void mouseClicked(int x, int y){
-        selectedPiece = Optional.empty();
-
+        if(selectedPiece == null){
+            for(Piece p: playerPieces){
+                if(p.loc.contains(x,y)){
+                    selectedPiece = p;
+                }
+            }
+        }
+        else{
+            Optional<Square> underMouseS = board.squareAtPoint(new Point(x,y));
+            if(underMouseS.isPresent() && underMouseS.get().hasPiece() == false){
+                selectedPiece.setLoc(underMouseS.get());
+                selectedPiece = null;
+            }
+            else{
+                selectedPiece.setPos(selectedPiece.loc.getLocation());
+                selectedPiece = null;
+            }
+        }
     }
     public String convertCoord(String row){
         switch (row){

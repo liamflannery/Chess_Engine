@@ -13,6 +13,7 @@ class Main extends JFrame {
 
         public App() {
             setPreferredSize(new Dimension(1000, 720));
+            this.addMouseListener(this);
             stage = new Stage();
         
         }
@@ -24,13 +25,14 @@ class Main extends JFrame {
 
         @Override
         public void mouseClicked(MouseEvent e) {
+            stage.mouseClicked(e.getX(), e.getY());
             // TODO Auto-generated method stub
             
         }
 
         @Override
         public void mousePressed(MouseEvent e) {
-            stage.mouseClicked(e.getX(), e.getY());
+            
             
         }
 

@@ -10,7 +10,7 @@ public class Board {
     public Board(){
         for(int i = 0; i < squares.length; i++) {
             for(int j = 0; j < squares[i].length; j++) {
-                squares[i][j] = new Square(colToLabel(i), j, 10+87*i, 10+87*j);
+                squares[i][j] = new Square(colToLabel(i), j, 10+87*i, 10+87*j, null);
             }
         }
     }

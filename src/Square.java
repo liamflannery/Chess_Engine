@@ -7,11 +7,13 @@ public class Square extends Rectangle{
     static int size = 87;
     char col;
     int row;
+    Piece piece;
 
-    public Square(char inCol, int inRow, int inX, int inY){
+    public Square(char inCol, int inRow, int inX, int inY, Piece inPiece){
         super(inX, inY, size, size);
         col = inCol;
         row = inRow;
+        piece = inPiece;
     }
     void paint(Graphics g, Point mousePos) {
         if(contains(mousePos)) {
@@ -32,6 +34,14 @@ public class Square extends Rectangle{
         if (p != null) {
             return(super.contains(p));
         } else {
+            return false;
+        }
+    }
+    public boolean hasPiece(){
+        if(piece != null){
+            return true;
+        }
+        else{
             return false;
         }
     }
