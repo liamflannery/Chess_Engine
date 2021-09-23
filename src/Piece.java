@@ -1,12 +1,5 @@
-import java.awt.Color;
 import java.awt.Graphics;
-import java.awt.Polygon;
-import java.util.List;
 import javax.imageio.ImageIO;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.WindowConstants;
-import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -44,6 +37,10 @@ public abstract class Piece{
                     System.out.println("Failed to load: .\\img\\black_" + this.getClass().getName() + ".png");
                 }  
         }
-       g.drawImage(image, loc.x + 2, loc.y + 2, 85, 85, null);
+        draw(g);
+       
+    }
+    public void draw(Graphics g){
+        g.drawImage(image, loc.x + 2, loc.y + 2, 85, 85, null);
     }
 }

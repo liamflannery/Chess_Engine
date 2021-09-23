@@ -17,7 +17,7 @@ public class Square extends Rectangle{
         if(contains(mousePos)) {
             g.setColor(Color.GRAY);
         } 
-        else if(col % 2 == 0 && row % 2 != 0 || col % 2 != 0 && row % 2 == 0) {
+        if(col % 2 == 0 && row % 2 != 0 || col % 2 != 0 && row % 2 == 0) {
             g.setColor(Color.WHITE);
         }
         else{
