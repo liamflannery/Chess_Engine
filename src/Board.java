@@ -30,4 +30,15 @@ public class Board {
             }
         }
       }
+      public Optional<Square> squareAtPoint(Point p) {
+        for(int i=0; i < squares.length; i++) {
+            for(int j=0; j < squares[i].length; j++) {
+                if(squares[i][j].contains(p)) {
+                    return Optional.of(squares[i][j]);
+                }
+            }
+        }
+        return Optional.empty();
+       
+    }
 }
