@@ -2,6 +2,7 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 public class Stage {
@@ -9,6 +10,7 @@ public class Stage {
     Piece selectedPiece;
     List<Piece> playerPieces; 
     List<Piece> compPieces;
+    Optional<Square> underMouseS;
     boolean playAsWhite = true;
     public Stage() {
         
@@ -91,6 +93,8 @@ public class Stage {
             playerPieces.add(new Pawn(board.squares[6][6], false));
             playerPieces.add(new Pawn(board.squares[7][6], false));
         }
+        board.setBoard(playerPieces, compPieces);
+        
     }
 
     public void paint(Graphics g, Point mouseLoc) {
@@ -109,7 +113,7 @@ public class Stage {
         
     }
     public void underMouse(Graphics g, Point mouseLoc){
-        Optional<Square> underMouseS = board.squareAtPoint(mouseLoc);
+        underMouseS = board.squareAtPoint(mouseLoc);
         if(underMouseS.isPresent()) {
             if(selectedPiece != null){
                 selectedPiece.setPos(new Point(mouseLoc.x - 40, mouseLoc.y - 40));
@@ -117,22 +121,32 @@ public class Stage {
 
             Square hoverCell = underMouseS.get();
             g.setColor(Color.DARK_GRAY);
-            g.drawString(String.valueOf(hoverCell.col) + convertCoord(String.valueOf(hoverCell.row + 1)), 740, 30);
+            g.drawString(String.valueOf(hoverCell.col) + String.valueOf(hoverCell.row), 740, 30);
         }
     }
     public void mouseClicked(int x, int y){
         if(selectedPiece == null){
+            
             for(Piece p: playerPieces){
                 if(p.loc.contains(x,y)){
                     selectedPiece = p;
+                    System.out.println(board.legalMoves(selectedPiece).toString());
                 }
             }
         }
         else{
-            Optional<Square> underMouseS = board.squareAtPoint(new Point(x,y));
-            if(underMouseS.isPresent() && underMouseS.get().hasPiece() == false){
-                selectedPiece.setLoc(underMouseS.get());
-                selectedPiece = null;
+            underMouseS = board.squareAtPoint(new Point(x,y));
+            if((underMouseS.isPresent())){
+                if(board.legalMoves(selectedPiece).contains(underMouseS.get())){
+                    selectedPiece.setLoc(underMouseS.get());
+                    selectedPiece = null;
+                    board.setBoard(playerPieces, compPieces);
+                    //System.out.println(Arrays.toString(board.boardPos));
+                }
+                else{
+                    selectedPiece.setPos(selectedPiece.loc.getLocation());
+                    selectedPiece = null; 
+                }
             }
             else{
                 selectedPiece.setPos(selectedPiece.loc.getLocation());
@@ -140,26 +154,5 @@ public class Stage {
             }
         }
     }
-    public String convertCoord(String row){
-        switch (row){
-            case "1":
-                return "8";
-            case "2":
-                return "7";
-            case "3":
-                return "6";
-            case "4":
-                return "5";
-            case "5":
-                return "4";
-            case "6":
-                return "3";
-            case "7":
-                return "2";
-            case "8":
-                return "1";
-            default:
-                return "0";
-        }
-    }
+    
 }

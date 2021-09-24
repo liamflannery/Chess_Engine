@@ -6,11 +6,13 @@ import java.awt.Rectangle;
 public class Square extends Rectangle{
     static int size = 87;
     char col;
+    int numCol;
     int row;
     Piece piece;
 
-    public Square(char inCol, int inRow, int inX, int inY, Piece inPiece){
+    public Square(char inCol, int inColNum,int inRow, int inX, int inY, Piece inPiece){
         super(inX, inY, size, size);
+        numCol = inColNum;
         col = inCol;
         row = inRow;
         piece = inPiece;
@@ -44,6 +46,9 @@ public class Square extends Rectangle{
         else{
             return false;
         }
+    }
+    public String toString(){
+        return (String.valueOf(col) + "," + String.valueOf(row));
     }
     
 }

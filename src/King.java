@@ -1,4 +1,3 @@
-
 public class King extends Piece{
     public King(Square inLoc, Boolean inCol){
         loc = inLoc;
