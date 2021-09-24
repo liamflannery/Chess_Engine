@@ -11,7 +11,7 @@ public class Stage {
     List<Piece> playerPieces; 
     List<Piece> compPieces;
     Optional<Square> underMouseS;
-    boolean playAsWhite = true;
+    boolean playAsWhite = false;
     public Stage() {
         
         board = new Board();
@@ -126,8 +126,13 @@ public class Stage {
     }
     public void mouseClicked(int x, int y){
         if(selectedPiece == null){
-            
             for(Piece p: playerPieces){
+                if(p.loc.contains(x,y)){
+                    selectedPiece = p;
+                    System.out.println(board.legalMoves(selectedPiece).toString());
+                }
+            }
+            for(Piece p: compPieces){
                 if(p.loc.contains(x,y)){
                     selectedPiece = p;
                     System.out.println(board.legalMoves(selectedPiece).toString());
@@ -149,17 +154,28 @@ public class Stage {
                     selectedPiece.moved = true;
                     selectedPiece = null;
                     board.setBoard(playerPieces, compPieces);
+                    unSelectPieces();
                     //System.out.println(Arrays.toString(board.boardPos));
                 }
 
                 else{
                     selectedPiece.setPos(selectedPiece.loc.getLocation());
                     selectedPiece = null; 
+                    unSelectPieces();
                 }
             }
             else{
                 selectedPiece.setPos(selectedPiece.loc.getLocation());
                 selectedPiece = null;
+                unSelectPieces();
+            }
+        }
+    }
+    public void unSelectPieces(){
+        Square[][] tempSquares = board.squares;
+        for(int i = 0; i < tempSquares.length; i++) {
+            for(int j = 0; j < tempSquares[i].length; j++) {
+                tempSquares[i][j].selected = false;
             }
         }
     }

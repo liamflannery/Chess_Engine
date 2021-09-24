@@ -9,6 +9,8 @@ public class Square extends Rectangle{
     int numCol;
     int row;
     Piece piece;
+    Color color;
+    boolean selected;
 
     public Square(char inCol, int inColNum,int inRow, int inX, int inY, Piece inPiece){
         super(inX, inY, size, size);
@@ -16,17 +18,21 @@ public class Square extends Rectangle{
         col = inCol;
         row = inRow;
         piece = inPiece;
+        selected = false;
     }
     void paint(Graphics g, Point mousePos) {
-        if(contains(mousePos)) {
-            g.setColor(Color.GRAY);
-        } 
-        if(col % 2 == 0 && row % 2 != 0 || col % 2 != 0 && row % 2 == 0) {
-            g.setColor(Color.WHITE);
+        if(selected == false){
+            if(contains(mousePos)) {
+                color = Color.GRAY;
+            } 
+            if(col % 2 == 0 && row % 2 != 0 || col % 2 != 0 && row % 2 == 0) {
+                color = new Color(171, 210, 250);
+            }
+            else{
+                color = new Color(61, 81, 140);
+            }
         }
-        else{
-            g.setColor(Color.BLACK);
-        }
+        g.setColor(color);
         g.fillRect(x,y,size,size);
         g.setColor(Color.BLACK);
         g.drawRect(x,y,size,size);
@@ -49,6 +55,10 @@ public class Square extends Rectangle{
     }
     public String toString(){
         return (String.valueOf(col) + "," + String.valueOf(row));
+    }
+    public void setColor(Color inColor){
+        color = inColor;
+        selected = true;
     }
     
 }

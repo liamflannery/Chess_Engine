@@ -9,6 +9,6 @@ public class Pawn extends Piece{
     }
     @Override
     public void draw(Graphics g){
-        g.drawImage(image, x + 9 , y + 9 , 70, 70, null);
+        g.drawImage(image, x + 11 , y + 11 , 60, 60, null);
     }
 }

@@ -6,6 +6,7 @@ import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import java.awt.Color;
 
 public class Board {
 
@@ -34,6 +35,7 @@ public class Board {
         for(int i = 0; i < possibleMoves.length; i++){
             if(possibleMoves[i] == 1){
                 moves.add(squares[i%8][7 - i/8]);
+                squares[i%8][7-i/8].setColor(new Color(91, 230, 255));
             }  
         }
         return moves;

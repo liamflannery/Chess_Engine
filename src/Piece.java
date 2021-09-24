@@ -34,7 +34,7 @@ public abstract class Piece{
        
     }
     public void draw(Graphics g){
-        g.drawImage(image, x, y, 85, 85, null);
+        g.drawImage(image, x + 4, y + 4, 75, 75, null);
     }
     public void setPos(Point p){
         x = p.x;
