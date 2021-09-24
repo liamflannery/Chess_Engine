@@ -8,6 +8,7 @@ public abstract class Piece{
     public Square loc;
     public int x;
     public int y;
+    public boolean moved = false;
     BufferedImage image;
     Boolean isWhite;
 

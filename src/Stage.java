@@ -138,11 +138,20 @@ public class Stage {
             underMouseS = board.squareAtPoint(new Point(x,y));
             if((underMouseS.isPresent())){
                 if(board.legalMoves(selectedPiece).contains(underMouseS.get())){
+                    if(underMouseS.get().piece != null){
+                        Piece killPiece = underMouseS.get().piece;
+                        killPiece.loc.piece = null;
+                        killPiece.loc = null;
+                        compPieces.remove(killPiece);
+                    }
+
                     selectedPiece.setLoc(underMouseS.get());
+                    selectedPiece.moved = true;
                     selectedPiece = null;
                     board.setBoard(playerPieces, compPieces);
                     //System.out.println(Arrays.toString(board.boardPos));
                 }
+
                 else{
                     selectedPiece.setPos(selectedPiece.loc.getLocation());
                     selectedPiece = null; 

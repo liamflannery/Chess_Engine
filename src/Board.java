@@ -30,7 +30,7 @@ public class Board {
         List<Square> moves = new ArrayList<Square>();
         possibleMoves = new int[64];
         int pos = convertPos(p);
-        findMoves(pos, pieceToByte(p));
+        findMoves(pos, pieceToByte(p), p.moved);
         for(int i = 0; i < possibleMoves.length; i++){
             if(possibleMoves[i] == 1){
                 moves.add(squares[i%8][7 - i/8]);
@@ -38,11 +38,25 @@ public class Board {
         }
         return moves;
     }
-    private void findMoves(int pos, int type){
-        if(type == 1){
-            possibleMoves[pos + 8] = 1;
-            possibleMoves[pos + 8 * 2] = 1;
+    private void findMoves(int pos, int type, boolean moved){
+        int team = Integer.signum(type);
+        type = Math.abs(type);
+        switch(type){
+            case(1):
+                possibleMoves[pos + 8] = boardPos[pos + 8] == 0 ? 1: 0;
+                if(moved == false){
+                    possibleMoves[pos + 8 * 2] = boardPos[pos + 8 * 2] == 0 ? 1: 0;
+                }
+                if(boardPos[pos + 7] != 0){
+                    possibleMoves[pos + 7] = Integer.signum(boardPos[pos + 7]) != team ? 1 : 0;
+                }
+                if(boardPos[pos + 9] != 0){
+                    possibleMoves[pos + 9] = 1;
+                }
+                break;
+               
         }
+     
     }
     private int pieceToByte(Piece p){
         int value = 0;
