@@ -1,6 +1,7 @@
 import java.awt.Graphics;
 import java.awt.Point;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Consumer;
@@ -13,15 +14,19 @@ public class Board {
     Square[][] squares = new Square[8][8];
     public int[] boardPos = new int[64];
     int[] possibleMoves = new int[64];
-    public Board(){
+    MoveFinder moveFinder = new MoveFinder();
+    boolean isWhite;
+    public Board(boolean isWhiteIn){
         for(int i = 0; i < squares.length; i++) {
             for(int j = 0; j < squares[i].length; j++) {
                 squares[i][j] = new Square(colToLabel(i),i, (squares[i].length - j), 10+87*i, 10+87*j, null);
             }
         }
+        isWhite = isWhiteIn;
     }
     public void setBoard(List<Piece> player, List<Piece> comp){
         List<Piece> allPieces = Stream.concat(player.stream(), comp.stream()).collect(Collectors.toList());
+        
         boardPos = new int[64];
         for(Piece p: allPieces){
             boardPos[convertPos(p)] = pieceToByte(p);
@@ -31,7 +36,7 @@ public class Board {
         List<Square> moves = new ArrayList<Square>();
         possibleMoves = new int[64];
         int pos = convertPos(p);
-        findMoves(pos, pieceToByte(p), p.moved);
+        possibleMoves = moveFinder.findMoves(pos, pieceToByte(p), p.moved, boardPos, isWhite);
         for(int i = 0; i < possibleMoves.length; i++){
             if(possibleMoves[i] == 1){
                 moves.add(squares[i%8][7 - i/8]);

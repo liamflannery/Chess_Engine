@@ -11,10 +11,10 @@ public class Stage {
     List<Piece> playerPieces; 
     List<Piece> compPieces;
     Optional<Square> underMouseS;
-    boolean playAsWhite = false;
+    boolean playAsWhite = true;
     public Stage() {
         
-        board = new Board();
+        board = new Board(playAsWhite);
         playerPieces = new ArrayList<Piece>();
         compPieces = new ArrayList<Piece>();
         if(playAsWhite){
@@ -135,6 +135,7 @@ public class Stage {
             for(Piece p: compPieces){
                 if(p.loc.contains(x,y)){
                     selectedPiece = p;
+                    
                     System.out.println(board.legalMoves(selectedPiece).toString());
                 }
             }
