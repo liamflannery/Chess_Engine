@@ -148,7 +148,13 @@ public class Stage {
                         Piece killPiece = underMouseS.get().piece;
                         killPiece.loc.piece = null;
                         killPiece.loc = null;
-                        compPieces.remove(killPiece);
+                        if(compPieces.contains(killPiece)){
+                            compPieces.remove(killPiece);
+                        }
+                        else{
+                            playerPieces.remove(killPiece);
+                        }
+                        
                     }
 
                     selectedPiece.setLoc(underMouseS.get());
