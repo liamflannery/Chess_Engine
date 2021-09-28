@@ -77,15 +77,16 @@ public class MoveFinder {
     public void singleMoves(int direction, int directionEnd){
         for(int i = direction; i < directionEnd ; i++){
             move = pos + directionIndex[i];
-            if(move < boardPos.length && move >= 0){
-                vetMove();
+            if(move < boardPos.length && move >= 0 && numSquaresToEdge[pos][i] > 0){
+                if(!(Math.abs(type) == 1 && boardPos[move] != 0)){
+                    vetMove();
+                }
             }
             
         }
     }
     public void slidingMoves(int direction, int directionEnd){
         for(int i = direction; i < directionEnd ; i++){
-            System.out.println(pos + "," + i);
             for(int j = 1; j <= numSquaresToEdge[pos][i]; j++){
                 move = pos + directionIndex[i] * j;
                 if(move < boardPos.length && move >= 0){
@@ -112,20 +113,71 @@ public class MoveFinder {
         }
     }
     public void knightMoves(){
+        int inc = 0;
+      //  -17,-15,-10,-6,6,10,15,17
         for(int i = 0; i < knightDir.length; i++){
-            move = pos + knightDir[i];
+            switch(knightDir[i]){
+                case(-17):
+                    if(numSquaresToEdge[pos][2] >= 1 && numSquaresToEdge[pos][1] >= 2){
+                        inc = knightDir[i];
+                    }
+                    break;
+                case(-15):
+                if(numSquaresToEdge[pos][1] >= 2 && numSquaresToEdge[pos][3] >= 1){
+                    inc = knightDir[i];
+                }
+                break;
+                case(-10):
+                    if(numSquaresToEdge[pos][1] >= 1 && numSquaresToEdge[pos][2] >= 2){
+                        inc = knightDir[i];
+                    }
+                    break;
+                case(-6):
+                if(numSquaresToEdge[pos][3] >= 2 && numSquaresToEdge[pos][1] >= 1){
+                    inc = knightDir[i];
+                }
+                break;
+                case(17):
+                    if(numSquaresToEdge[pos][3] >= 1 && numSquaresToEdge[pos][0] >= 2){
+                        inc = knightDir[i];
+                    }
+                    break;
+                case(15):
+                if(numSquaresToEdge[pos][0] >= 2 && numSquaresToEdge[pos][2] >= 1){
+                    inc = knightDir[i];
+                }
+                break;
+                case(10):
+                    if(numSquaresToEdge[pos][0] >= 1 && numSquaresToEdge[pos][3] >= 2){
+                        inc = knightDir[i];
+                    }
+                    break;
+                case(6):
+                if(numSquaresToEdge[pos][2] >= 2 && numSquaresToEdge[pos][0] >= 1){
+                    inc = knightDir[i];
+                }
+                break;
+                default:
+                    inc = knightDir[i];
+                    
+            }
+            move = pos + inc;
+            vetMove();
         }
-        vetMove();
+        
+        
     }
     public void vetMove(){
-        if(boardPos[move] != 0){
-            if(boardPos[move] * type < 0){
+        if(move > 0 && move < boardPos.length){
+            if(boardPos[move] != 0){
+                if(boardPos[move] * type < 0){
+                    moves[move] = 1;
+                }
+            }
+            else{
                 moves[move] = 1;
             }
-        }
-        else{
-            moves[move] = 1;
-        }
+    }
     }
     public void computeSquares(){
         numSquaresToEdge = new int[64][];
