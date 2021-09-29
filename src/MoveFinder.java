@@ -34,9 +34,15 @@ public class MoveFinder {
        switch(type){
             case(-1):
                 singleMoves(1,2);
+                singleMoves(5, 6);
+                singleMoves(7, 8);
+                pawnMoves();
                 break;
             case(1):
                 singleMoves(0,1);
+                singleMoves(4, 5);
+                singleMoves(6, 7);
+                pawnMoves();
                 break;
             case(6):
                 singleMoves(0, 8);
@@ -78,8 +84,9 @@ public class MoveFinder {
         for(int i = direction; i < directionEnd ; i++){
             move = pos + directionIndex[i];
             if(move < boardPos.length && move >= 0 && numSquaresToEdge[pos][i] > 0){
-                if(!(Math.abs(type) == 1 && boardPos[move] != 0)){
-                    vetMove();
+                if(!(Math.abs(type) == 1 && boardPos[move] != 0 && i < 3)){
+                    if(!(Math.abs(type) == 1 && boardPos[move] == 0 && i > 3))
+                        vetMove();
                 }
             }
             
@@ -167,11 +174,26 @@ public class MoveFinder {
         
         
     }
+    public void pawnMoves(){
+        if(!(moved)){
+            move = pos + 16 * type;
+            if(boardPos[move] == 0 && boardPos[pos + 8 * type] == 0){
+                vetMove();
+            }
+            
+        }
+    }
     public void vetMove(){
         if(move > 0 && move < boardPos.length){
             if(boardPos[move] != 0){
                 if(boardPos[move] * type < 0){
-                    moves[move] = 1;
+                    if(boardPos[move] * type < 0 && Math.abs(boardPos[move]) == 6){
+                        moves[move] = 2;
+                    }
+                    else{
+                        moves[move] = 1;
+                    }
+                   
                 }
             }
             else{

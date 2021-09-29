@@ -16,12 +16,14 @@ public class Board {
     int[] possibleMoves = new int[64];
     MoveFinder moveFinder = new MoveFinder();
     boolean isWhite;
+    boolean inCheck;
     public Board(boolean isWhiteIn){
         for(int i = 0; i < squares.length; i++) {
             for(int j = 0; j < squares[i].length; j++) {
                 squares[i][j] = new Square(colToLabel(i),i, (squares[i].length - j), 10+87*i, 10+87*j, null);
             }
         }
+        inCheck = false;
         isWhite = isWhiteIn;
     }
     public void setBoard(List<Piece> player, List<Piece> comp){
@@ -38,33 +40,17 @@ public class Board {
         int pos = convertPos(p);
         possibleMoves = moveFinder.findMoves(pos, pieceToByte(p), p.moved, boardPos, isWhite);
         for(int i = 0; i < possibleMoves.length; i++){
-            if(possibleMoves[i] == 1){
+            if(possibleMoves[i] > 0){
                 moves.add(squares[i%8][7 - i/8]);
                 squares[i%8][7-i/8].setColor(new Color(91, 230, 255));
-            }  
+            } 
+            if(possibleMoves[i] == 2){
+                inCheck = true;
+            }
         }
         return moves;
     }
-    private void findMoves(int pos, int type, boolean moved){
-        int team = Integer.signum(type);
-        type = Math.abs(type);
-        switch(type){
-            case(1):
-                possibleMoves[pos + 8] = boardPos[pos + 8] == 0 ? 1: 0;
-                if(moved == false){
-                    possibleMoves[pos + 8 * 2] = boardPos[pos + 8 * 2] == 0 ? 1: 0;
-                }
-                if(boardPos[pos + 7] != 0){
-                    possibleMoves[pos + 7] = Integer.signum(boardPos[pos + 7]) != team ? 1 : 0;
-                }
-                if(boardPos[pos + 9] != 0){
-                    possibleMoves[pos + 9] = 1;
-                }
-                break;
-               
-        }
-     
-    }
+    
     private int pieceToByte(Piece p){
         int value = 0;
         switch(p.getClass().getName()){
@@ -87,9 +73,17 @@ public class Board {
                 value =  1;
                 break;
         }
-        if (!p.isWhite){
-            value = value * -1;
+        if(isWhite){
+            if (!p.isWhite){
+                value = value * -1;
+            }
         }
+        else{
+            if(p.isWhite){
+                value = value * -1;
+            }
+        }
+        
         return value;
     }
     private int convertPos(Piece p){
