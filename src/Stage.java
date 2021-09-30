@@ -10,6 +10,8 @@ public class Stage {
     Piece selectedPiece;
     List<Piece> playerPieces; 
     List<Piece> compPieces;
+    Piece compKing;
+    Piece playerKing;
     Optional<Square> underMouseS;
     boolean playAsWhite = true;
     public Stage() {
@@ -22,7 +24,8 @@ public class Stage {
             compPieces.add(new Knight(board.squares[1][0], false));
             compPieces.add(new Bishop(board.squares[2][0], false));
             compPieces.add(new Queen(board.squares[3][0], false));
-            compPieces.add(new King(board.squares[4][0], false));
+            compKing = new King(board.squares[4][0], false);
+            compPieces.add(compKing);
             compPieces.add(new Bishop(board.squares[5][0], false));
             compPieces.add(new Knight(board.squares[6][0], false));
             compPieces.add(new Rook(board.squares[7][0], false));
@@ -41,7 +44,8 @@ public class Stage {
             playerPieces.add(new Knight(board.squares[1][7], true));
             playerPieces.add(new Bishop(board.squares[2][7], true));
             playerPieces.add(new Queen(board.squares[3][7], true));
-            playerPieces.add(new King(board.squares[4][7], true));
+            playerKing = new King(board.squares[4][7], true);
+            playerPieces.add(playerKing);
             playerPieces.add(new Bishop(board.squares[5][7], true));
             playerPieces.add(new Knight(board.squares[6][7], true));
             playerPieces.add(new Rook(board.squares[7][7], true));
@@ -142,7 +146,8 @@ public class Stage {
         else{
             underMouseS = board.squareAtPoint(new Point(x,y));
             if((underMouseS.isPresent())){
-                if(board.legalMoves(selectedPiece).contains(underMouseS.get())){
+                Move thisMove = board.legalMoves(selectedPiece);
+                if(thisMove.squares.contains(underMouseS.get())){
                     if(underMouseS.get().piece != null){
                         Piece killPiece = underMouseS.get().piece;
                         killPiece.loc.piece = null;
@@ -158,8 +163,28 @@ public class Stage {
 
                     selectedPiece.setLoc(underMouseS.get());
                     selectedPiece.moved = true;
-                    selectedPiece = null;
                     board.setBoard(playerPieces, compPieces);
+                    thisMove = board.legalMoves(selectedPiece);
+                    if(thisMove.willCheck){
+                        System.out.println("check");
+                        Piece king;
+                        boolean checkmate = true;
+                        if(compPieces.contains(selectedPiece)){
+                            for(Piece p: playerPieces){
+                                Move checkMove = board.legalMoves(p);
+                                if(checkMove.squares != null){
+                                    if(checkMove.squares.size() > 0){
+                                        checkmate = false;
+                                        break;
+                                    }
+                                }
+                            }
+                            if(checkmate){
+                                System.out.println("checkmate");
+                            }
+                        }
+                    }
+                    selectedPiece = null;
                     unSelectPieces();
                     //System.out.println(Arrays.toString(board.boardPos));
                 }

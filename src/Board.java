@@ -36,23 +36,25 @@ public class Board {
             boardPos[convertPos(p)] = pieceToByte(p);
         }
     }
-    public List<Square> legalMoves(Piece p){
+    public Move legalMoves(Piece p){
         List<Square> moves = new ArrayList<Square>();
         possibleMoves = new int[64];
+        Move parentMove;
         int pos = convertPos(p);
-        possibleMoves = moveFinder.findMoves(pos, pieceToByte(p), p.moved, boardPos, isWhite).getMoves();
+        parentMove = moveFinder.findMoves(pos, pieceToByte(p), p.moved, boardPos, isWhite);
+        possibleMoves = parentMove.getMoves();
+        inCheck = parentMove.willCheck;
         CheckFinder checkFinder = new CheckFinder(possibleMoves, boardPos, enemyPos);
         possibleMoves = checkFinder.findMoves(pos, pieceToByte(p));
+        
         for(int i = 0; i < possibleMoves.length; i++){
             if(possibleMoves[i] > 0){
                 moves.add(squares[i%8][7 - i/8]);
                 squares[i%8][7-i/8].setColor(new Color(91, 230, 255));
             } 
-            if(possibleMoves[i] == 2){
-                inCheck = true;
-            }
         }
-        return moves;
+        Move moveSquare = new Move(moves, inCheck);
+        return moveSquare;
     }
     
     private int pieceToByte(Piece p){
