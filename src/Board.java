@@ -15,6 +15,7 @@ public class Board {
     public int[] boardPos = new int[64];
     int[] possibleMoves = new int[64];
     List<Integer> enemyPos = new ArrayList<Integer>();
+    List<Integer> friendlyPos = new ArrayList<Integer>();
     MoveFinder moveFinder = new MoveFinder();
     boolean isWhite;
     boolean inCheck;
@@ -32,6 +33,7 @@ public class Board {
         
         boardPos = new int[64];
         enemyPos = new ArrayList<Integer>();
+        friendlyPos = new ArrayList<Integer>();
         for(Piece p: allPieces){
             boardPos[convertPos(p)] = pieceToByte(p);
         }
@@ -44,8 +46,26 @@ public class Board {
         parentMove = moveFinder.findMoves(pos, pieceToByte(p), p.moved, boardPos, isWhite);
         possibleMoves = parentMove.getMoves();
         inCheck = parentMove.willCheck;
-        CheckFinder checkFinder = new CheckFinder(possibleMoves, boardPos, enemyPos);
+        CheckFinder checkFinder;
+        if(isWhite){
+            if(p.isWhite){
+                checkFinder = new CheckFinder(possibleMoves, boardPos, enemyPos, isWhite);
+            }
+            else{
+                checkFinder = new CheckFinder(possibleMoves, boardPos, friendlyPos, isWhite);
+            }
+        }
+        else{
+            if(p.isWhite){
+                checkFinder = new CheckFinder(possibleMoves, boardPos, friendlyPos, isWhite);
+            }
+            else{
+                checkFinder = new CheckFinder(possibleMoves, boardPos, enemyPos, isWhite);
+            }
+        }     
+        
         possibleMoves = checkFinder.findMoves(pos, pieceToByte(p));
+            
         
         for(int i = 0; i < possibleMoves.length; i++){
             if(possibleMoves[i] > 0){
@@ -84,11 +104,17 @@ public class Board {
                 value = value * -1;
                 enemyPos.add(convertPos(p));
             }
+            else{
+                friendlyPos.add(convertPos(p));
+            }
         }
         else{
             if(p.isWhite){
                 value = value * -1;
                 enemyPos.add(convertPos(p));
+            }
+            else{
+                friendlyPos.add(convertPos(p));
             }
         }
         

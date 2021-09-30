@@ -13,7 +13,8 @@ public class CheckFinder {
     MoveFinder moveFinder;
     boolean willCheck;
     Move potentialMove;
-    public CheckFinder(int[] inPossibleMoves, int[] inBoardPos, List<Integer> enemyPosIn){
+    boolean isWhite;
+    public CheckFinder(int[] inPossibleMoves, int[] inBoardPos, List<Integer> enemyPosIn, boolean isWhiteIn){
         enemyPos = new ArrayList<Integer>(enemyPosIn);
         removedEnemy = -1;
         possibleMoves = inPossibleMoves;
@@ -21,20 +22,23 @@ public class CheckFinder {
         moveFinder = new MoveFinder();
         testMove = new int[64];
         willCheck = false;
+        isWhite = isWhiteIn;
     }
     public int[] findMoves(int pos, int type){
         int kingPos = 0;
-        
-        int[] storeTestMove = testMove;
+        int king = 6;
+        if(type < 0){
+            king = king * -1;
+        }
         for(int i = 0; i < boardPos.length; i++){
-            testMove[i] = boardPos[i];
-            if(boardPos[i] == 6){
+            if(boardPos[i] == king){
                 kingPos = i;
+                break;
             }
         }
         for(int j = 0; j < possibleMoves.length; j++){
             testMove = boardPos.clone();
-            if(possibleMoves[j] > 0 && type > 0){
+            if(possibleMoves[j] > 0){
                 if(removedEnemy >= 0){
                     enemyPos.add(removedEnemy);
                     removedEnemy = -1;
@@ -54,9 +58,7 @@ public class CheckFinder {
                         possibleMoves[j] = 0;
                         break;
                     }
-                    willCheck = false;
                 }
-                testMove = storeTestMove;
             }
         }
         return possibleMoves;
