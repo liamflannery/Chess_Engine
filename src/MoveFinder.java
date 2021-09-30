@@ -13,12 +13,16 @@ public class MoveFinder {
     int[] directionIndex;
     int[][] numSquaresToEdge;
     int[] knightDir;
+    boolean willCheck;
+    Move returnMove;
     public MoveFinder(){
         directionIndex = new int[]{8,-8,-1,1,7,-7,9,-9};
         knightDir = new int[]{-17,-15,-10,-6,6,10,15,17};
+        willCheck = false;
         computeSquares();
     }
-    public int[] findMoves(int position, int inType, boolean inMoved, int[] inBoardPos, boolean isWhiteIn){
+    public Move findMoves(int position, int inType, boolean inMoved, int[] inBoardPos, boolean isWhiteIn){
+        willCheck = false;
         pos = position;
         type = inType;
         moved = inMoved;
@@ -46,8 +50,10 @@ public class MoveFinder {
                 break;
             case(6):
                 singleMoves(0, 8);
+                castle();
                 break;
             case(-6):
+                castle();
                 singleMoves(0, 8);
                 break;
             case(5):
@@ -77,8 +83,8 @@ public class MoveFinder {
             default:
                 Arrays.fill(moves, 1);
         }
-        
-        return moves;
+        returnMove = new Move(moves, willCheck);
+        return returnMove;
     }
     public void singleMoves(int direction, int directionEnd){
         for(int i = direction; i < directionEnd ; i++){
@@ -183,12 +189,16 @@ public class MoveFinder {
             
         }
     }
+    public void castle(){
+        
+    }
     public void vetMove(){
         if(move > 0 && move < boardPos.length){
             if(boardPos[move] != 0){
                 if(boardPos[move] * type < 0){
                     if(boardPos[move] * type < 0 && Math.abs(boardPos[move]) == 6){
                         moves[move] = 2;
+                        willCheck = true;
                     }
                     else{
                         moves[move] = 1;

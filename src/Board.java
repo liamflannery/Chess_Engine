@@ -14,6 +14,7 @@ public class Board {
     Square[][] squares = new Square[8][8];
     public int[] boardPos = new int[64];
     int[] possibleMoves = new int[64];
+    List<Integer> enemyPos = new ArrayList<Integer>();
     MoveFinder moveFinder = new MoveFinder();
     boolean isWhite;
     boolean inCheck;
@@ -30,6 +31,7 @@ public class Board {
         List<Piece> allPieces = Stream.concat(player.stream(), comp.stream()).collect(Collectors.toList());
         
         boardPos = new int[64];
+        enemyPos = new ArrayList<Integer>();
         for(Piece p: allPieces){
             boardPos[convertPos(p)] = pieceToByte(p);
         }
@@ -38,7 +40,9 @@ public class Board {
         List<Square> moves = new ArrayList<Square>();
         possibleMoves = new int[64];
         int pos = convertPos(p);
-        possibleMoves = moveFinder.findMoves(pos, pieceToByte(p), p.moved, boardPos, isWhite);
+        possibleMoves = moveFinder.findMoves(pos, pieceToByte(p), p.moved, boardPos, isWhite).getMoves();
+        CheckFinder checkFinder = new CheckFinder(possibleMoves, boardPos, enemyPos);
+        possibleMoves = checkFinder.findMoves(pos, pieceToByte(p));
         for(int i = 0; i < possibleMoves.length; i++){
             if(possibleMoves[i] > 0){
                 moves.add(squares[i%8][7 - i/8]);
@@ -76,11 +80,13 @@ public class Board {
         if(isWhite){
             if (!p.isWhite){
                 value = value * -1;
+                enemyPos.add(convertPos(p));
             }
         }
         else{
             if(p.isWhite){
                 value = value * -1;
+                enemyPos.add(convertPos(p));
             }
         }
         

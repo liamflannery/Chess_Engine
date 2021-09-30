@@ -125,20 +125,17 @@ public class Stage {
         }
     }
     public void mouseClicked(int x, int y){
-        if(board.inCheck){
-            System.out.println("in check");
-        }
         if(selectedPiece == null){
             for(Piece p: playerPieces){
                 if(p.loc.contains(x,y)){
                     selectedPiece = p;
-                    board.legalMoves(selectedPiece);
+                    board.legalMoves(p);
                 }
             }
             for(Piece p: compPieces){
-                if(p.loc.contains(x,y)){
+               if(p.loc.contains(x,y)){
                     selectedPiece = p;
-                    board.legalMoves(selectedPiece);
+                    board.legalMoves(p);
                 }
             }
         }
