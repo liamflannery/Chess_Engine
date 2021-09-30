@@ -8,15 +8,15 @@ public class CheckFinder {
     int[] possibleMoves;
     int[] boardPos;
     int[] testMove;
-    List<Integer> enemyPos;
-    int removedEnemy;
+    List<Piece> enemyPos;
+    Piece removedEnemy;
     MoveFinder moveFinder;
     boolean willCheck;
     Move potentialMove;
     boolean isWhite;
-    public CheckFinder(int[] inPossibleMoves, int[] inBoardPos, List<Integer> enemyPosIn, boolean isWhiteIn){
-        enemyPos = new ArrayList<Integer>(enemyPosIn);
-        removedEnemy = -1;
+    public CheckFinder(int[] inPossibleMoves, int[] inBoardPos, List<Piece> enemyPosIn, boolean isWhiteIn){
+        enemyPos = new ArrayList<Piece>(enemyPosIn);
+        removedEnemy = null;
         possibleMoves = inPossibleMoves;
         boardPos = inBoardPos;
         moveFinder = new MoveFinder();
@@ -39,20 +39,23 @@ public class CheckFinder {
         for(int j = 0; j < possibleMoves.length; j++){
             testMove = boardPos.clone();
             if(possibleMoves[j] > 0){
-                if(removedEnemy >= 0){
-                    enemyPos.add(removedEnemy);
-                    removedEnemy = -1;
-                }
-                if(enemyPos.contains(j)){
-                     removedEnemy = enemyPos.remove(enemyPos.indexOf(j));
-                 }
-                else{
-                    removedEnemy = -1;
-                }
+                // if(removedEnemy != null){
+                //     enemyPos.add(removedEnemy);
+                //     removedEnemy = null;
+                // }
+                // // if(enemyPos.contains()){
+                // //      removedEnemy = enemyPos.remove(enemyPos.indexOf(j));
+                // //  }
+                // else{
+                //     removedEnemy = null;
+                // }
                 testMove[j] = type;
                 testMove[pos] = 0;
-                for(int enemy:enemyPos){
-                    potentialMove = moveFinder.findMoves(enemy, testMove[enemy], false, testMove, true);
+                for(Piece enemy:enemyPos){
+                    if(enemy.posOnBoard == j){
+                        break;
+                    }
+                    potentialMove = moveFinder.findMoves(enemy.posOnBoard, testMove[enemy.posOnBoard], enemy.moved, testMove, enemy.isWhite);
                     willCheck = potentialMove.testCheck();
                     if(willCheck){
                         possibleMoves[j] = 0;

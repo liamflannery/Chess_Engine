@@ -9,6 +9,7 @@ public abstract class Piece{
     public int x;
     public int y;
     public boolean moved = false;
+    public int posOnBoard;
     BufferedImage image;
     Boolean isWhite;
 

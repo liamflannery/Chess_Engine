@@ -14,8 +14,8 @@ public class Board {
     Square[][] squares = new Square[8][8];
     public int[] boardPos = new int[64];
     int[] possibleMoves = new int[64];
-    List<Integer> enemyPos = new ArrayList<Integer>();
-    List<Integer> friendlyPos = new ArrayList<Integer>();
+    List<Piece> enemyPos = new ArrayList<Piece>();
+    List<Piece> friendlyPos = new ArrayList<Piece>();
     MoveFinder moveFinder = new MoveFinder();
     boolean isWhite;
     boolean inCheck;
@@ -32,8 +32,8 @@ public class Board {
         List<Piece> allPieces = Stream.concat(player.stream(), comp.stream()).collect(Collectors.toList());
         
         boardPos = new int[64];
-        enemyPos = new ArrayList<Integer>();
-        friendlyPos = new ArrayList<Integer>();
+        enemyPos = new ArrayList<Piece>();
+        friendlyPos = new ArrayList<Piece>();
         for(Piece p: allPieces){
             boardPos[convertPos(p)] = pieceToByte(p);
         }
@@ -47,6 +47,7 @@ public class Board {
         possibleMoves = parentMove.getMoves();
         inCheck = parentMove.willCheck;
         CheckFinder checkFinder;
+        
         if(isWhite){
             if(p.isWhite){
                 checkFinder = new CheckFinder(possibleMoves, boardPos, enemyPos, isWhite);
@@ -102,19 +103,23 @@ public class Board {
         if(isWhite){
             if (!p.isWhite){
                 value = value * -1;
-                enemyPos.add(convertPos(p));
+                p.posOnBoard = convertPos(p);
+                enemyPos.add(p);
             }
             else{
-                friendlyPos.add(convertPos(p));
+                p.posOnBoard = convertPos(p);
+                friendlyPos.add(p);
             }
         }
         else{
             if(p.isWhite){
                 value = value * -1;
-                enemyPos.add(convertPos(p));
+                p.posOnBoard = convertPos(p);
+                enemyPos.add(p);
             }
             else{
-                friendlyPos.add(convertPos(p));
+                p.posOnBoard = convertPos(p);
+                friendlyPos.add(p);
             }
         }
         
