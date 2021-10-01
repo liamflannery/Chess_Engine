@@ -52,11 +52,12 @@ public class CheckFinder {
                 testMove[j] = type;
                 testMove[pos] = 0;
                 for(Piece enemy:enemyPos){
-                    if(enemy.posOnBoard == j){
-                        break;
-                    }
                     potentialMove = moveFinder.findMoves(enemy.posOnBoard, testMove[enemy.posOnBoard], enemy.moved, testMove, enemy.isWhite);
                     willCheck = potentialMove.testCheck();
+                    if(enemy.posOnBoard == j && willCheck){
+                        break;
+                    }
+                    
                     if(willCheck){
                         possibleMoves[j] = 0;
                         break;
