@@ -18,14 +18,14 @@ public class Board {
     List<Piece> friendlyPos = new ArrayList<Piece>();
     MoveFinder moveFinder = new MoveFinder();
     boolean isWhite;
-    boolean inCheck;
+    boolean willCheck;
     public Board(boolean isWhiteIn){
         for(int i = 0; i < squares.length; i++) {
             for(int j = 0; j < squares[i].length; j++) {
                 squares[i][j] = new Square(colToLabel(i),i, (squares[i].length - j), 10+87*i, 10+87*j, null);
             }
         }
-        inCheck = false;
+        willCheck = false;
         isWhite = isWhiteIn;
     }
     public void setBoard(List<Piece> player, List<Piece> comp){
@@ -38,30 +38,30 @@ public class Board {
             boardPos[convertPos(p)] = pieceToByte(p);
         }
     }
-    public Move legalMoves(Piece p){
+    public Move legalMoves(Piece p, boolean inCheck){
         List<Square> moves = new ArrayList<Square>();
         possibleMoves = new int[64];
         Move parentMove;
         int pos = convertPos(p);
-        parentMove = moveFinder.findMoves(pos, pieceToByte(p), p.moved, boardPos, isWhite);
+        parentMove = moveFinder.findMoves(pos, pieceToByte(p), p.moved, boardPos, isWhite, inCheck);
         possibleMoves = parentMove.getMoves();
-        inCheck = parentMove.willCheck;
+        willCheck = parentMove.willCheck;
         CheckFinder checkFinder;
         
         if(isWhite){
             if(p.isWhite){
-                checkFinder = new CheckFinder(possibleMoves, boardPos, enemyPos, isWhite);
+                checkFinder = new CheckFinder(possibleMoves, boardPos, enemyPos, isWhite, inCheck);
             }
             else{
-                checkFinder = new CheckFinder(possibleMoves, boardPos, friendlyPos, isWhite);
+                checkFinder = new CheckFinder(possibleMoves, boardPos, friendlyPos, isWhite, inCheck);
             }
         }
         else{
             if(p.isWhite){
-                checkFinder = new CheckFinder(possibleMoves, boardPos, friendlyPos, isWhite);
+                checkFinder = new CheckFinder(possibleMoves, boardPos, friendlyPos, isWhite, inCheck);
             }
             else{
-                checkFinder = new CheckFinder(possibleMoves, boardPos, enemyPos, isWhite);
+                checkFinder = new CheckFinder(possibleMoves, boardPos, enemyPos, isWhite, inCheck);
             }
         }     
         
@@ -74,7 +74,7 @@ public class Board {
                 squares[i%8][7-i/8].setColor(new Color(91, 230, 255));
             } 
         }
-        Move moveSquare = new Move(moves, inCheck);
+        Move moveSquare = new Move(moves, willCheck);
         return moveSquare;
     }
     

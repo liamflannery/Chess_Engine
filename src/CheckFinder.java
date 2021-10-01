@@ -14,7 +14,8 @@ public class CheckFinder {
     boolean willCheck;
     Move potentialMove;
     boolean isWhite;
-    public CheckFinder(int[] inPossibleMoves, int[] inBoardPos, List<Piece> enemyPosIn, boolean isWhiteIn){
+    boolean inCheck;
+    public CheckFinder(int[] inPossibleMoves, int[] inBoardPos, List<Piece> enemyPosIn, boolean isWhiteIn, boolean inInCheck){
         enemyPos = new ArrayList<Piece>(enemyPosIn);
         removedEnemy = null;
         possibleMoves = inPossibleMoves;
@@ -23,6 +24,7 @@ public class CheckFinder {
         testMove = new int[64];
         willCheck = false;
         isWhite = isWhiteIn;
+        inCheck = inInCheck;
     }
     public int[] findMoves(int pos, int type){
         int kingPos = 0;
@@ -52,7 +54,7 @@ public class CheckFinder {
                 testMove[j] = type;
                 testMove[pos] = 0;
                 for(Piece enemy:enemyPos){
-                    potentialMove = moveFinder.findMoves(enemy.posOnBoard, testMove[enemy.posOnBoard], enemy.moved, testMove, enemy.isWhite);
+                    potentialMove = moveFinder.findMoves(enemy.posOnBoard, testMove[enemy.posOnBoard], enemy.moved, testMove, enemy.isWhite, inCheck);
                     willCheck = potentialMove.testCheck();
                     if(enemy.posOnBoard == j && willCheck){
                         break;

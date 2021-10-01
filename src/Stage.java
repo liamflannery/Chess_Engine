@@ -14,8 +14,9 @@ public class Stage {
     Piece playerKing;
     Optional<Square> underMouseS;
     boolean playAsWhite = true;
+    boolean check;
     public Stage() {
-        
+        check = false;
         board = new Board(playAsWhite);
         playerPieces = new ArrayList<Piece>();
         compPieces = new ArrayList<Piece>();
@@ -133,20 +134,20 @@ public class Stage {
             for(Piece p: playerPieces){
                 if(p.loc.contains(x,y)){
                     selectedPiece = p;
-                    board.legalMoves(p);
+                    board.legalMoves(p, check);
                 }
             }
             for(Piece p: compPieces){
                if(p.loc.contains(x,y)){
                     selectedPiece = p;
-                    board.legalMoves(p);
+                    board.legalMoves(p, check);
                 }
             }
         }
         else{
             underMouseS = board.squareAtPoint(new Point(x,y));
             if((underMouseS.isPresent())){
-                Move thisMove = board.legalMoves(selectedPiece);
+                Move thisMove = board.legalMoves(selectedPiece, check);
                 if(thisMove.squares.contains(underMouseS.get())){
                     if(underMouseS.get().piece != null){
                         Piece killPiece = underMouseS.get().piece;
@@ -164,14 +165,13 @@ public class Stage {
                     selectedPiece.setLoc(underMouseS.get());
                     selectedPiece.moved = true;
                     board.setBoard(playerPieces, compPieces);
-                    thisMove = board.legalMoves(selectedPiece);
+                    thisMove = board.legalMoves(selectedPiece, check);
                     if(thisMove.willCheck){
-                        System.out.println("check");
-                        Piece king;
+                        check = true;
                         boolean checkmate = true;
                         if(compPieces.contains(selectedPiece)){
                             for(Piece p: playerPieces){
-                                Move checkMove = board.legalMoves(p);
+                                Move checkMove = board.legalMoves(p, check);
                                 if(checkMove.squares != null){
                                     if(checkMove.squares.size() > 0){
                                         checkmate = false;
@@ -183,6 +183,9 @@ public class Stage {
                                 System.out.println("checkmate");
                             }
                         }
+                    }
+                    else{
+                        check = false;
                     }
                     selectedPiece = null;
                     unSelectPieces();
