@@ -15,6 +15,7 @@ public class Stage {
     Optional<Square> underMouseS;
     boolean playAsWhite = true;
     boolean check;
+    Move thisMove;
     public Stage() {
         check = false;
         board = new Board(playAsWhite);
@@ -147,25 +148,22 @@ public class Stage {
         else{
             underMouseS = board.squareAtPoint(new Point(x,y));
             if((underMouseS.isPresent())){
-                Move thisMove = board.legalMoves(selectedPiece, check);
+                thisMove = board.legalMoves(selectedPiece, check);
                 if(thisMove.squares.contains(underMouseS.get())){
-                    if(underMouseS.get().piece != null){
-                        Piece killPiece = underMouseS.get().piece;
-                        killPiece.loc.piece = null;
-                        killPiece.loc = null;
-                        if(compPieces.contains(killPiece)){
-                            compPieces.remove(killPiece);
-                        }
-                        else{
-                            playerPieces.remove(killPiece);
-                        }
-                        
+                    switch(thisMove.castle){
+                        case(0):
+                            normalMove();
+                        break;
+                        case(1):
+                            System.out.println("castle");
+                            if(underMouseS.get() == board.squares[0][6]){
+                                
+                                normalMove();
+                            }
+                        break;
                     }
 
-                    selectedPiece.setLoc(underMouseS.get());
-                    selectedPiece.moved = true;
-                    board.setBoard(playerPieces, compPieces);
-                    thisMove = board.legalMoves(selectedPiece, check);
+                        
                     if(thisMove.willCheck){
                         check = true;
                         boolean checkmate = true;
@@ -204,6 +202,23 @@ public class Stage {
                 unSelectPieces();
             }
         }
+    }
+    public void normalMove(){
+        if(underMouseS.get().piece != null){
+            Piece killPiece = underMouseS.get().piece;
+            killPiece.loc.piece = null;
+            killPiece.loc = null;
+            if(compPieces.contains(killPiece)){
+                compPieces.remove(killPiece);
+            }
+            else{
+                playerPieces.remove(killPiece);
+            }
+        }
+        selectedPiece.setLoc(underMouseS.get());
+        selectedPiece.moved = true;
+        board.setBoard(playerPieces, compPieces);
+        thisMove = board.legalMoves(selectedPiece, check);
     }
     public void unSelectPieces(){
         Square[][] tempSquares = board.squares;

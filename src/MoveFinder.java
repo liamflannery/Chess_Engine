@@ -197,6 +197,7 @@ public class MoveFinder {
         //System.out.println(inCheck);
         if(!(inCheck)){
             if(!(moved)){
+                castle = 1;
                 move = pos + 2;
                 vetMove();
                 move = pos -2;

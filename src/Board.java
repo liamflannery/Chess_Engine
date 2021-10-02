@@ -74,7 +74,7 @@ public class Board {
                 squares[i%8][7-i/8].setColor(new Color(91, 230, 255));
             } 
         }
-        Move moveSquare = new Move(moves, willCheck);
+        Move moveSquare = new Move(moves, willCheck, moveFinder.castle);
         return moveSquare;
     }
     

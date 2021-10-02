@@ -10,9 +10,10 @@ public class Move {
        willCheck = willCheckIn;
        castle = inCastle;
    } 
-   public Move(List<Square> squaresIn, boolean willCheckIn){
+   public Move(List<Square> squaresIn, boolean willCheckIn, int inCastle){
        squares = squaresIn;
        willCheck = willCheckIn;
+       castle = inCastle;
    }
    public int[] getMoves(){
     return moves;
