@@ -10,11 +10,15 @@ public class Stage {
     Piece selectedPiece;
     List<Piece> playerPieces; 
     List<Piece> compPieces;
+    Piece compKing;
+    Piece playerKing;
     Optional<Square> underMouseS;
-    boolean playAsWhite = false;
+    boolean playAsWhite = true;
+    boolean check;
+    Move thisMove;
     public Stage() {
-        
-        board = new Board();
+        check = false;
+        board = new Board(playAsWhite);
         playerPieces = new ArrayList<Piece>();
         compPieces = new ArrayList<Piece>();
         if(playAsWhite){
@@ -22,7 +26,8 @@ public class Stage {
             compPieces.add(new Knight(board.squares[1][0], false));
             compPieces.add(new Bishop(board.squares[2][0], false));
             compPieces.add(new Queen(board.squares[3][0], false));
-            compPieces.add(new King(board.squares[4][0], false));
+            compKing = new King(board.squares[4][0], false);
+            compPieces.add(compKing);
             compPieces.add(new Bishop(board.squares[5][0], false));
             compPieces.add(new Knight(board.squares[6][0], false));
             compPieces.add(new Rook(board.squares[7][0], false));
@@ -41,7 +46,8 @@ public class Stage {
             playerPieces.add(new Knight(board.squares[1][7], true));
             playerPieces.add(new Bishop(board.squares[2][7], true));
             playerPieces.add(new Queen(board.squares[3][7], true));
-            playerPieces.add(new King(board.squares[4][7], true));
+            playerKing = new King(board.squares[4][7], true);
+            playerPieces.add(playerKing);
             playerPieces.add(new Bishop(board.squares[5][7], true));
             playerPieces.add(new Knight(board.squares[6][7], true));
             playerPieces.add(new Rook(board.squares[7][7], true));
@@ -129,31 +135,57 @@ public class Stage {
             for(Piece p: playerPieces){
                 if(p.loc.contains(x,y)){
                     selectedPiece = p;
-                    System.out.println(board.legalMoves(selectedPiece).toString());
+                    board.legalMoves(p, check);
                 }
             }
             for(Piece p: compPieces){
-                if(p.loc.contains(x,y)){
+               if(p.loc.contains(x,y)){
                     selectedPiece = p;
-                    System.out.println(board.legalMoves(selectedPiece).toString());
+                    board.legalMoves(p, check);
                 }
             }
         }
         else{
             underMouseS = board.squareAtPoint(new Point(x,y));
             if((underMouseS.isPresent())){
-                if(board.legalMoves(selectedPiece).contains(underMouseS.get())){
-                    if(underMouseS.get().piece != null){
-                        Piece killPiece = underMouseS.get().piece;
-                        killPiece.loc.piece = null;
-                        killPiece.loc = null;
-                        compPieces.remove(killPiece);
+                thisMove = board.legalMoves(selectedPiece, check);
+                if(thisMove.squares.contains(underMouseS.get())){
+                    switch(thisMove.castle){
+                        case(0):
+                            normalMove();
+                        break;
+                        case(1):
+                            System.out.println("castle");
+                            if(underMouseS.get() == board.squares[0][6]){
+                                
+                                normalMove();
+                            }
+                        break;
                     }
 
-                    selectedPiece.setLoc(underMouseS.get());
-                    selectedPiece.moved = true;
+                        
+                    if(thisMove.willCheck){
+                        check = true;
+                        boolean checkmate = true;
+                        if(compPieces.contains(selectedPiece)){
+                            for(Piece p: playerPieces){
+                                Move checkMove = board.legalMoves(p, check);
+                                if(checkMove.squares != null){
+                                    if(checkMove.squares.size() > 0){
+                                        checkmate = false;
+                                        break;
+                                    }
+                                }
+                            }
+                            if(checkmate){
+                                System.out.println("checkmate");
+                            }
+                        }
+                    }
+                    else{
+                        check = false;
+                    }
                     selectedPiece = null;
-                    board.setBoard(playerPieces, compPieces);
                     unSelectPieces();
                     //System.out.println(Arrays.toString(board.boardPos));
                 }
@@ -170,6 +202,23 @@ public class Stage {
                 unSelectPieces();
             }
         }
+    }
+    public void normalMove(){
+        if(underMouseS.get().piece != null){
+            Piece killPiece = underMouseS.get().piece;
+            killPiece.loc.piece = null;
+            killPiece.loc = null;
+            if(compPieces.contains(killPiece)){
+                compPieces.remove(killPiece);
+            }
+            else{
+                playerPieces.remove(killPiece);
+            }
+        }
+        selectedPiece.setLoc(underMouseS.get());
+        selectedPiece.moved = true;
+        board.setBoard(playerPieces, compPieces);
+        thisMove = board.legalMoves(selectedPiece, check);
     }
     public void unSelectPieces(){
         Square[][] tempSquares = board.squares;

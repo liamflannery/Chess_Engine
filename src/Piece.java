@@ -8,11 +8,14 @@ public abstract class Piece{
     public Square loc;
     public int x;
     public int y;
-    public boolean moved = false;
+    public boolean moved;
+    public int posOnBoard;
     BufferedImage image;
     Boolean isWhite;
 
-    
+    public Piece(){
+        moved = false;
+    }
     public void paint(Graphics g) {
         if(isWhite){
             try{
