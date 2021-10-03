@@ -36,19 +36,45 @@ public class Stage {
         for(Map.Entry<String, Point> piece: initialWhitePosition.entrySet()){
             switch(piece.getKey()){
                 case("King"):
-                    whitePieces.add(new King(board.squares[(int)piece.getValue().getX()][(int)piece.getValue().getY()], true));
+                    whitePieces.add(new King(board.squares[(int)piece.getValue().getY()][(int)piece.getValue().getX()], true));
                 break;
                 case("Queen"):
-                    whitePieces.add(new Queen(board.squares[(int)piece.getValue().getX()][(int)piece.getValue().getY()], true));
+                    whitePieces.add(new Queen(board.squares[(int)piece.getValue().getY()][(int)piece.getValue().getX()], true));
+                break;
+                case("Bishop"):
+                    whitePieces.add(new Bishop(board.squares[(int)piece.getValue().getY()][(int)piece.getValue().getX()], true));
+                break;
+                case("Knight"):
+                    whitePieces.add(new Knight(board.squares[(int)piece.getValue().getY()][(int)piece.getValue().getX()], true));
+                break;
+                case("Rook"):
+                    whitePieces.add(new Rook(board.squares[(int)piece.getValue().getY()][(int)piece.getValue().getX()], true));
+                break;
+                case("Pawn"):
+                    whitePieces.add(new Pawn(board.squares[(int)piece.getValue().getY()][(int)piece.getValue().getX()], true));
+                break;
             }
         }
         for(Map.Entry<String, Point> piece: initialBlackPosition.entrySet()){
             switch(piece.getKey()){
                 case("King"):
-                    blackPieces.add(new King(board.squares[(int)piece.getValue().getX()][(int)piece.getValue().getY()], false));
+                    blackPieces.add(new King(board.squares[(int)piece.getValue().getY()][(int)piece.getValue().getX()], false));
                 break;
                 case("Queen"):
-                    blackPieces.add(new Queen(board.squares[(int)piece.getValue().getX()][(int)piece.getValue().getY()], false));
+                    blackPieces.add(new Queen(board.squares[(int)piece.getValue().getY()][(int)piece.getValue().getX()], false));
+                break;
+                case("Bishop"):
+                    blackPieces.add(new Bishop(board.squares[(int)piece.getValue().getY()][(int)piece.getValue().getX()], false));
+                break;
+                case("Knight"):
+                    blackPieces.add(new Knight(board.squares[(int)piece.getValue().getY()][(int)piece.getValue().getX()], false));
+                break;
+                case("Rook"):
+                    blackPieces.add(new Rook(board.squares[(int)piece.getValue().getY()][(int)piece.getValue().getX()], false));
+                break;
+                case("Pawn"):
+                    blackPieces.add(new Pawn(board.squares[(int)piece.getValue().getY()][(int)piece.getValue().getX()], false));
+                break;
             }
         }
         white = new Player(this, whitePieces, blackPieces, Turn.White);
@@ -73,6 +99,12 @@ public class Stage {
         }
         if(currentTurn == Turn.Black && black.getClass().getName().equals("Player")){
             black.underMouse(g, mouseLoc);
+        }
+        if(currentTurn == Turn.White && white.getClass().getName().equals("Computer")){
+            currentTurn = white.move(0,0);
+        }
+        if(currentTurn == Turn.Black && black.getClass().getName().equals("Computer")){
+            currentTurn = black.move(0,0);
         }
         
         

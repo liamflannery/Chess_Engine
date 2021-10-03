@@ -76,13 +76,6 @@ public class Player extends Competitor{
     public void normalMove(){
         moveMaker.move(underMouseS.get(), selectedPiece, opPieces, myPieces, board, check);
     }
-    public void unSelectPieces(){
-        Square[][] tempSquares = board.squares;
-        for(int i = 0; i < tempSquares.length; i++) {
-            for(int j = 0; j < tempSquares[i].length; j++) {
-                tempSquares[i][j].selected = false;
-            }
-        }
-    }
+    
     
 }

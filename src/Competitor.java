@@ -34,5 +34,13 @@ public abstract class Competitor {
         return null;
     }
     public void underMouse(Graphics g, Point mouseLoc){};
+    public void unSelectPieces(){
+        Square[][] tempSquares = board.squares;
+        for(int i = 0; i < tempSquares.length; i++) {
+            for(int j = 0; j < tempSquares[i].length; j++) {
+                tempSquares[i][j].selected = false;
+            }
+        }
+    }
   
 }
