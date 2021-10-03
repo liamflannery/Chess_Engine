@@ -33,6 +33,7 @@ public class CheckFinder {
                 for(Piece enemy:enemyPos){
                     potentialMove = moveFinder.findMoves(enemy.posOnBoard, testMove[enemy.posOnBoard], enemy.moved, testMove, inCheck);
                     willCheck = potentialMove.testCheck();
+                    
                     if(enemy.posOnBoard == j && willCheck){
                         break;
                     }

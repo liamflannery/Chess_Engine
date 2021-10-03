@@ -20,9 +20,10 @@ class Main extends JFrame {
             this.addMouseListener(this);
             whitePos = new HashMap<String, Point>();
             blackPos = new HashMap<String,Point>();
-           // whitePos.put("King", new Point(0,0));
-            whitePos.put("Queen", new Point(1,5));
-            blackPos.put("Queen", new Point(0,0));
+            whitePos.put("King", new Point(2,3));
+            whitePos.put("Queen", new Point(1,0));
+            blackPos.put("King", new Point(0,3));
+            //blackPos.put("Queen", new Point(1,7));
             stage = new Stage(whitePos, blackPos);
         
         }

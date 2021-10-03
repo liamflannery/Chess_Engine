@@ -36,23 +36,23 @@ public class Stage {
         for(Map.Entry<String, Point> piece: initialWhitePosition.entrySet()){
             switch(piece.getKey()){
                 case("King"):
-                    whitePieces.add(new King(board.squares[(int)piece.getValue().getX()][(int)piece.getValue().getX()], true));
+                    whitePieces.add(new King(board.squares[(int)piece.getValue().getX()][(int)piece.getValue().getY()], true));
                 break;
                 case("Queen"):
-                    whitePieces.add(new Queen(board.squares[(int)piece.getValue().getX()][(int)piece.getValue().getX()], true));
+                    whitePieces.add(new Queen(board.squares[(int)piece.getValue().getX()][(int)piece.getValue().getY()], true));
             }
         }
         for(Map.Entry<String, Point> piece: initialBlackPosition.entrySet()){
             switch(piece.getKey()){
                 case("King"):
-                    blackPieces.add(new King(board.squares[(int)piece.getValue().getX()][(int)piece.getValue().getX()], false));
+                    blackPieces.add(new King(board.squares[(int)piece.getValue().getX()][(int)piece.getValue().getY()], false));
                 break;
                 case("Queen"):
-                    blackPieces.add(new Queen(board.squares[(int)piece.getValue().getX()][(int)piece.getValue().getX()], false));
+                    blackPieces.add(new Queen(board.squares[(int)piece.getValue().getX()][(int)piece.getValue().getY()], false));
             }
         }
         white = new Player(this, whitePieces, blackPieces, Turn.White);
-        black = new Player(this, blackPieces, whitePieces, Turn.Black);
+        black = new Computer(this, blackPieces, whitePieces, Turn.Black);
         check = false;
         
         

@@ -46,10 +46,10 @@ public class MoveFinder {
                 break;
             case(6):
                 singleMoves(0, 8);
-                castle();
+               // castle();
                 break;
             case(-6):
-                castle();
+              //  castle();
                 singleMoves(0, 8);
                 break;
             case(5):
@@ -200,7 +200,7 @@ public class MoveFinder {
                   
     }
     public void vetMove(){
-        if(move > 0 && move < boardPos.length){
+        if(move >= 0 && move < boardPos.length){
             if(boardPos[move] != 0){
                 if(boardPos[move] * type < 0){
                     if(boardPos[move] * type < 0 && Math.abs(boardPos[move]) == 6){

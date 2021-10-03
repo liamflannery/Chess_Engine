@@ -50,4 +50,12 @@ public abstract class Piece{
         x = loc.x;
         y = loc.y;
     }
+    public String toString(){
+        if(isWhite){
+            return("White " + this.getClass().getName() + " at: " + posOnBoard);
+        }
+        else{
+            return("Black " + this.getClass().getName() + " at: " + posOnBoard);
+        }
+    }
 }

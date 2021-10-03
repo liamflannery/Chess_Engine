@@ -8,13 +8,16 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 public class Player extends Competitor{
-    public Player(Stage inStage, List<Piece> inMyPieces, List<Piece> inOpPieces, Stage.Turn myTurn) {
-        super(inStage, inMyPieces, inOpPieces, myTurn);
-    }
-
     Optional<Square> underMouseS;
     Piece selectedPiece;
     Move thisMove;
+    MoveMaker moveMaker;
+    public Player(Stage inStage, List<Piece> inMyPieces, List<Piece> inOpPieces, Stage.Turn myTurn) {
+        super(inStage, inMyPieces, inOpPieces, myTurn);
+        moveMaker = new MoveMaker();
+    }
+
+    
    
     @Override
     public void underMouse(Graphics g, Point mouseLoc){
@@ -42,72 +45,36 @@ public class Player extends Competitor{
             underMouseS = board.squareAtPoint(new Point(x,y));
             if((underMouseS.isPresent())){
                 thisMove = board.legalMoves(selectedPiece, check);
+                
                 if(thisMove.squares.contains(underMouseS.get())){    
-                    if(thisMove.willCheck){
-                        check = true;
-                        boolean checkmate = true;
-                        if(opPieces.contains(selectedPiece)){
-                            for(Piece p: myPieces){
-                                Move checkMove = board.legalMoves(p, check);
-                                if(checkMove.squares != null){
-                                    if(checkMove.squares.size() > 0){
-                                        checkmate = false;
-                                        break;
-                                    }
-                                }
-                            }
-                            if(checkmate){
-                                System.out.println("checkmate");
-                            }
-                        }
-                    }
-                    else{
-                        check = false;
-                    }
-                    return normalMove();
+                    normalMove();
+                    selectedPiece = null;
+                    unSelectPieces();
+                    return opTurn;
+                }
                    
-                    
-                    // switch(thisMove.castle){
-                    //     default:
-                    //         return normalMove();
-                    //     // case(0):
-                    //     //     return normalMove();
-                    //     // case(1):
-                    //     //     System.out.println("castle");
-                    //     //     if(underMouseS.get() == board.squares[0][6]){
-                    //     //         return normalMove();
-                    //     //     }
-                    //     // break;
-                    // }
-                    //System.out.println(Arrays.toString(board.boardPos));
-                    }
 
             else{
-                resetPiece();
+                selectedPiece.setPos(selectedPiece.loc.getLocation());
+                selectedPiece = null;
+                unSelectPieces();
                 return myTurn;
             }
         }
         else{
-            resetPiece();
+            selectedPiece.setPos(selectedPiece.loc.getLocation());
+            selectedPiece = null;
+            unSelectPieces();
             return myTurn;
         }
     }
            
     }
-    public Stage.Turn normalMove(){
-        if(underMouseS.get().piece != null){
-            Piece killPiece = underMouseS.get().piece;
-            killPiece.loc.piece = null;
-            killPiece.loc = null;
-            opPieces.remove(killPiece);
-        }
-        selectedPiece.setLoc(underMouseS.get());
-        selectedPiece.moved = true;
-        board.setBoard(myPieces, opPieces);
-        thisMove = board.legalMoves(selectedPiece, check);
-        selectedPiece = null;
-        unSelectPieces();
-        return opTurn;
+    public void check(){
+        
+    }
+    public void normalMove(){
+        moveMaker.move(underMouseS.get(), selectedPiece, opPieces, myPieces, board, check);
     }
     public void unSelectPieces(){
         Square[][] tempSquares = board.squares;
@@ -116,12 +83,6 @@ public class Player extends Competitor{
                 tempSquares[i][j].selected = false;
             }
         }
-    }
-    public void resetPiece(){
-        selectedPiece.setPos(selectedPiece.loc.getLocation());
-        selectedPiece = null;
-        unSelectPieces();
-        
     }
     
 }

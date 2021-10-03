@@ -95,7 +95,7 @@ public class Board {
             value = value * -1;
             blackPos.add(p);
         }
-        
+        p.posOnBoard = convertPos(p);
         return value;
     }
     private int convertPos(Piece p){
