@@ -7,8 +7,6 @@ public class MoveFinder {
     int[] boardPos;
     int[] moves;
     int[] borders;
-    boolean isWhite;
-    int team;
     int move;
     int[] directionIndex;
     int[][] numSquaresToEdge;
@@ -24,7 +22,7 @@ public class MoveFinder {
         computeSquares();
         castle = 0;
     }
-    public Move findMoves(int position, int inType, boolean inMoved, int[] inBoardPos, boolean isWhiteIn, boolean inInCheck){
+    public Move findMoves(int position, int inType, boolean inMoved, int[] inBoardPos, boolean inInCheck){
         inCheck = inInCheck;
         willCheck = false;
         pos = position;
@@ -32,13 +30,7 @@ public class MoveFinder {
         moved = inMoved;
         boardPos = inBoardPos;
         moves = new int[64];
-        isWhite = isWhiteIn;
-        if(isWhite){
-            team = -1;
-        }
-        else{
-            team = 1;
-        }
+   
        switch(type){
             case(-1):
                 singleMoves(1,2);

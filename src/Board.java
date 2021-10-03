@@ -14,26 +14,25 @@ public class Board {
     Square[][] squares = new Square[8][8];
     public int[] boardPos = new int[64];
     int[] possibleMoves = new int[64];
-    List<Piece> enemyPos = new ArrayList<Piece>();
-    List<Piece> friendlyPos = new ArrayList<Piece>();
+    List<Piece> whitePos = new ArrayList<Piece>();
+    List<Piece> blackPos = new ArrayList<Piece>();
     MoveFinder moveFinder = new MoveFinder();
     boolean isWhite;
     boolean willCheck;
-    public Board(boolean isWhiteIn){
+    public Board(){
         for(int i = 0; i < squares.length; i++) {
             for(int j = 0; j < squares[i].length; j++) {
                 squares[i][j] = new Square(colToLabel(i),i, (squares[i].length - j), 10+87*i, 10+87*j, null);
             }
         }
         willCheck = false;
-        isWhite = isWhiteIn;
     }
-    public void setBoard(List<Piece> player, List<Piece> comp){
-        List<Piece> allPieces = Stream.concat(player.stream(), comp.stream()).collect(Collectors.toList());
+    public void setBoard(List<Piece> white, List<Piece> black){
+        List<Piece> allPieces = Stream.concat(white.stream(), black.stream()).collect(Collectors.toList());
         
         boardPos = new int[64];
-        enemyPos = new ArrayList<Piece>();
-        friendlyPos = new ArrayList<Piece>();
+        whitePos = new ArrayList<Piece>();
+        blackPos = new ArrayList<Piece>();
         for(Piece p: allPieces){
             boardPos[convertPos(p)] = pieceToByte(p);
         }
@@ -43,27 +42,16 @@ public class Board {
         possibleMoves = new int[64];
         Move parentMove;
         int pos = convertPos(p);
-        parentMove = moveFinder.findMoves(pos, pieceToByte(p), p.moved, boardPos, isWhite, inCheck);
+        parentMove = moveFinder.findMoves(pos, pieceToByte(p), p.moved, boardPos, inCheck);
         possibleMoves = parentMove.getMoves();
         willCheck = parentMove.willCheck;
         CheckFinder checkFinder;
-        
-        if(isWhite){
-            if(p.isWhite){
-                checkFinder = new CheckFinder(possibleMoves, boardPos, enemyPos, isWhite, inCheck);
-            }
-            else{
-                checkFinder = new CheckFinder(possibleMoves, boardPos, friendlyPos, isWhite, inCheck);
-            }
+        if(p.isWhite){
+            checkFinder = new CheckFinder(possibleMoves, boardPos, blackPos, inCheck);
         }
         else{
-            if(p.isWhite){
-                checkFinder = new CheckFinder(possibleMoves, boardPos, friendlyPos, isWhite, inCheck);
-            }
-            else{
-                checkFinder = new CheckFinder(possibleMoves, boardPos, enemyPos, isWhite, inCheck);
-            }
-        }     
+            checkFinder = new CheckFinder(possibleMoves, boardPos, whitePos, inCheck);
+        }    
         
         possibleMoves = checkFinder.findMoves(pos, pieceToByte(p));
             
@@ -100,27 +88,12 @@ public class Board {
                 value =  1;
                 break;
         }
-        if(isWhite){
-            if (!p.isWhite){
-                value = value * -1;
-                p.posOnBoard = convertPos(p);
-                enemyPos.add(p);
-            }
-            else{
-                p.posOnBoard = convertPos(p);
-                friendlyPos.add(p);
-            }
+        if(p.isWhite){
+            whitePos.add(p);
         }
         else{
-            if(p.isWhite){
-                value = value * -1;
-                p.posOnBoard = convertPos(p);
-                enemyPos.add(p);
-            }
-            else{
-                p.posOnBoard = convertPos(p);
-                friendlyPos.add(p);
-            }
+            value = value * -1;
+            blackPos.add(p);
         }
         
         return value;

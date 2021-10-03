@@ -13,9 +13,8 @@ public class CheckFinder {
     MoveFinder moveFinder;
     boolean willCheck;
     Move potentialMove;
-    boolean isWhite;
     boolean inCheck;
-    public CheckFinder(int[] inPossibleMoves, int[] inBoardPos, List<Piece> enemyPosIn, boolean isWhiteIn, boolean inInCheck){
+    public CheckFinder(int[] inPossibleMoves, int[] inBoardPos, List<Piece> enemyPosIn, boolean inInCheck){
         enemyPos = new ArrayList<Piece>(enemyPosIn);
         removedEnemy = null;
         possibleMoves = inPossibleMoves;
@@ -23,38 +22,16 @@ public class CheckFinder {
         moveFinder = new MoveFinder();
         testMove = new int[64];
         willCheck = false;
-        isWhite = isWhiteIn;
         inCheck = inInCheck;
     }
-    public int[] findMoves(int pos, int type){
-        int kingPos = 0;
-        int king = 6;
-        if(type < 0){
-            king = king * -1;
-        }
-        for(int i = 0; i < boardPos.length; i++){
-            if(boardPos[i] == king){
-                kingPos = i;
-                break;
-            }
-        }
+    public int[] findMoves(int pos, int type){    
         for(int j = 0; j < possibleMoves.length; j++){
             testMove = boardPos.clone();
             if(possibleMoves[j] > 0){
-                // if(removedEnemy != null){
-                //     enemyPos.add(removedEnemy);
-                //     removedEnemy = null;
-                // }
-                // // if(enemyPos.contains()){
-                // //      removedEnemy = enemyPos.remove(enemyPos.indexOf(j));
-                // //  }
-                // else{
-                //     removedEnemy = null;
-                // }
                 testMove[j] = type;
                 testMove[pos] = 0;
                 for(Piece enemy:enemyPos){
-                    potentialMove = moveFinder.findMoves(enemy.posOnBoard, testMove[enemy.posOnBoard], enemy.moved, testMove, enemy.isWhite, inCheck);
+                    potentialMove = moveFinder.findMoves(enemy.posOnBoard, testMove[enemy.posOnBoard], enemy.moved, testMove, inCheck);
                     willCheck = potentialMove.testCheck();
                     if(enemy.posOnBoard == j && willCheck){
                         break;

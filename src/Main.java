@@ -4,17 +4,26 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.util.HashMap;
+import java.awt.Point;
 
 class Main extends JFrame {
     
     class App extends JPanel implements MouseListener{
         
         Stage stage;
+        HashMap<String, Point> whitePos;
+        HashMap<String,Point> blackPos;
 
         public App() {
             setPreferredSize(new Dimension(1000, 720));
             this.addMouseListener(this);
-            stage = new Stage();
+            whitePos = new HashMap<String, Point>();
+            blackPos = new HashMap<String,Point>();
+           // whitePos.put("King", new Point(0,0));
+            whitePos.put("Queen", new Point(1,5));
+            blackPos.put("Queen", new Point(0,0));
+            stage = new Stage(whitePos, blackPos);
         
         }
 
