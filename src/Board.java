@@ -19,17 +19,18 @@ public class Board {
     MoveFinder moveFinder = new MoveFinder();
     boolean isWhite;
     boolean willCheck;
+    boolean whiteAtBottom;
     public Board(){
         for(int i = 0; i < squares.length; i++) {
             for(int j = 0; j < squares[i].length; j++) {
-                squares[i][j] = new Square(colToLabel(i),i, (squares[i].length - j), 10+87*i, 10+87*j, null);
+                squares[i][j] = new Square(colToLabel(i),i, (squares[i].length - j), 10+87*i, 10+87*j, null, i,j);
             }
         }
         willCheck = false;
     }
-    public void setBoard(List<Piece> white, List<Piece> black){
+    public void setBoard(List<Piece> white, List<Piece> black, boolean inWhiteAtBottom){
         List<Piece> allPieces = Stream.concat(white.stream(), black.stream()).collect(Collectors.toList());
-        
+        whiteAtBottom = inWhiteAtBottom;
         boardPos = new int[64];
         whitePos = new ArrayList<Piece>();
         blackPos = new ArrayList<Piece>();
@@ -37,20 +38,28 @@ public class Board {
             boardPos[convertPos(p)] = pieceToByte(p);
         }
     }
-    public Move legalMoves(Piece p, boolean inCheck){
+    public Move legalMoves(Piece p, boolean inCheck, List<Piece> myPieces){
+        boolean facingUp;
+        if(!(whiteAtBottom || p.isWhite)){
+            facingUp = true;
+        }
+        else{
+            facingUp = false;
+        }
+        
         List<Square> moves = new ArrayList<Square>();
         possibleMoves = new int[64];
         Move parentMove;
         int pos = convertPos(p);
-        parentMove = moveFinder.findMoves(pos, pieceToByte(p), p.moved, boardPos, inCheck);
+        parentMove = moveFinder.findMoves(pos, pieceToByte(p), p.moved, boardPos, inCheck, facingUp, myPieces);
         possibleMoves = parentMove.getMoves();
         willCheck = parentMove.willCheck;
         CheckFinder checkFinder;
         if(p.isWhite){
-            checkFinder = new CheckFinder(possibleMoves, boardPos, blackPos, inCheck);
+            checkFinder = new CheckFinder(possibleMoves, boardPos, blackPos, inCheck, facingUp);
         }
         else{
-            checkFinder = new CheckFinder(possibleMoves, boardPos, whitePos, inCheck);
+            checkFinder = new CheckFinder(possibleMoves, boardPos, whitePos, inCheck, facingUp);
         }    
         
         possibleMoves = checkFinder.findMoves(pos, pieceToByte(p));
@@ -62,7 +71,7 @@ public class Board {
                 squares[i%8][7-i/8].setColor(new Color(91, 230, 255));
             } 
         }
-        Move moveSquare = new Move(moves, willCheck, moveFinder.castle);
+        Move moveSquare = new Move(moves, willCheck, moveFinder.kCastle ,moveFinder.qCastle);
         return moveSquare;
     }
     

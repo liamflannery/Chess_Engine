@@ -1,4 +1,5 @@
 import java.util.Arrays;
+import java.util.List;
 
 public class MoveFinder {
     int pos;
@@ -14,15 +15,20 @@ public class MoveFinder {
     boolean willCheck;
     boolean inCheck;
     Move returnMove;
-    int castle;
+    int qCastle;
+    int kCastle;
+    boolean facingUp;
+    List<Piece> myPieces;
     public MoveFinder(){
         directionIndex = new int[]{8,-8,-1,1,7,-7,9,-9};
         knightDir = new int[]{-17,-15,-10,-6,6,10,15,17};
         willCheck = false;
-        computeSquares();
-        castle = 0;
+        computeSquares();        
     }
-    public Move findMoves(int position, int inType, boolean inMoved, int[] inBoardPos, boolean inInCheck){
+    public Move findMoves(int position, int inType, boolean inMoved, int[] inBoardPos, boolean inInCheck, boolean inFacingUp, List<Piece> inMyPieces){
+        qCastle = -1;
+        kCastle = -1;
+        myPieces = inMyPieces;
         inCheck = inInCheck;
         willCheck = false;
         pos = position;
@@ -30,26 +36,41 @@ public class MoveFinder {
         moved = inMoved;
         boardPos = inBoardPos;
         moves = new int[64];
-   
+        facingUp = inFacingUp;
        switch(type){
             case(-1):
-                singleMoves(1,2);
-                singleMoves(5, 6);
-                singleMoves(7, 8);
+                if(facingUp){
+                    singleMoves(0,1);
+                    singleMoves(4, 5);
+                    singleMoves(6, 7);
+                }
+                else{
+                    singleMoves(1,2);
+                    singleMoves(5, 6);
+                    singleMoves(7, 8);
+                }
                 pawnMoves();
                 break;
             case(1):
-                singleMoves(0,1);
-                singleMoves(4, 5);
-                singleMoves(6, 7);
+                if(facingUp){
+                    singleMoves(0,1);
+                    singleMoves(4, 5);
+                    singleMoves(6, 7);
+                }
+                else{
+                    singleMoves(1,2);
+                    singleMoves(5, 6);
+                    singleMoves(7, 8);
+                }
+                
                 pawnMoves();
                 break;
             case(6):
                 singleMoves(0, 8);
-               // castle();
+                castle();
                 break;
             case(-6):
-              //  castle();
+                castle();
                 singleMoves(0, 8);
                 break;
             case(5):
@@ -79,7 +100,7 @@ public class MoveFinder {
             default:
                 Arrays.fill(moves, 1);
         }
-        returnMove = new Move(moves, willCheck, 0);
+        returnMove = new Move(moves, willCheck, kCastle, qCastle);
         return returnMove;
     }
     public void singleMoves(int direction, int directionEnd){
@@ -178,26 +199,42 @@ public class MoveFinder {
     }
     public void pawnMoves(){
         if(!(moved)){
-            move = pos + 16 * type;
-            if(boardPos[move] == 0 && boardPos[pos + 8 * type] == 0){
+            int direction;
+            if(facingUp){
+                direction = 1;
+            }
+            else{
+                direction = -1;
+            }
+            move = pos + 16 * direction;
+            if(boardPos[move] == 0 && boardPos[pos + 8 * direction] == 0){
                 vetMove();
             }
             
         }
     }
     public void castle(){
-        //System.out.println(inCheck);
         if(!(inCheck)){
             if(!(moved)){
-                castle = 1;
-                move = pos + 2;
-                vetMove();
-                move = pos -2;
-                vetMove();
-            }
+                for(Piece piece: myPieces){
+                    if(piece.getClass().getName().equals("Rook")){
+                        if(!(piece.moved)){
+                            if(piece.loc.col == 'A'){
+                                kCastle = myPieces.indexOf(piece);
+                                move = pos -2;
+                                vetMove();
+                            }
+                            if(piece.loc.col == 'H'){
+                                qCastle = myPieces.indexOf(piece);
+                                move = pos + 2;
+                                vetMove();
+                                //break;
+                            }
+                        }
+                    }
+                }  
+            }            
         }
-        
-                  
     }
     public void vetMove(){
         if(move >= 0 && move < boardPos.length){

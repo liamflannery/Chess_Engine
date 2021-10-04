@@ -15,8 +15,8 @@ public class Computer extends Competitor {
         Random rand = new Random();
         pieceToMove = myPieces.get(rand.nextInt(myPieces.size()));
         rand = new Random();
-        move = board.legalMoves(pieceToMove, check);
-        moveMaker.move(move.squares.get(rand.nextInt(move.squares.size())), pieceToMove, opPieces, myPieces, board, check);
+        move = board.legalMoves(pieceToMove, check, myPieces);
+        moveMaker.move(move.squares.get(rand.nextInt(move.squares.size())), pieceToMove, opPieces, myPieces, board, check, move.kCastle, move.qCastle);
         unSelectPieces();
         return opTurn;
     }

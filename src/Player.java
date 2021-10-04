@@ -36,7 +36,7 @@ public class Player extends Competitor{
             for(Piece p: myPieces){
                 if(p.loc.contains(x,y)){
                     selectedPiece = p;
-                    board.legalMoves(p, check);
+                    board.legalMoves(p, check, myPieces);
                 }
             }
             return myTurn;
@@ -44,8 +44,7 @@ public class Player extends Competitor{
         else{
             underMouseS = board.squareAtPoint(new Point(x,y));
             if((underMouseS.isPresent())){
-                thisMove = board.legalMoves(selectedPiece, check);
-                
+                thisMove = board.legalMoves(selectedPiece, check, myPieces);
                 if(thisMove.squares.contains(underMouseS.get())){    
                     normalMove();
                     selectedPiece = null;
@@ -74,7 +73,7 @@ public class Player extends Competitor{
         
     }
     public void normalMove(){
-        moveMaker.move(underMouseS.get(), selectedPiece, opPieces, myPieces, board, check);
+        moveMaker.move(underMouseS.get(), selectedPiece, opPieces, myPieces, board, check, thisMove.kCastle, thisMove.qCastle);
     }
     
     

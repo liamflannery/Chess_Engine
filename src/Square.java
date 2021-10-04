@@ -11,14 +11,18 @@ public class Square extends Rectangle{
     Piece piece;
     Color color;
     boolean selected;
+    int boardRow;
+    int boardColumn;
 
-    public Square(char inCol, int inColNum,int inRow, int inX, int inY, Piece inPiece){
+    public Square(char inCol, int inColNum,int inRow, int inX, int inY, Piece inPiece, int i, int j){
         super(inX, inY, size, size);
         numCol = inColNum;
         col = inCol;
         row = inRow;
         piece = inPiece;
         selected = false;
+        boardRow = i;
+        boardColumn = j;
     }
     void paint(Graphics g, Point mousePos) {
         if(selected == false){
@@ -59,6 +63,9 @@ public class Square extends Rectangle{
     public void setColor(Color inColor){
         color = inColor;
         selected = true;
+    }
+    public Point getPos(){
+        return new Point(boardRow, boardColumn);
     }
     
 }

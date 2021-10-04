@@ -3,17 +3,20 @@ import java.util.List;
 public class Move {
    int[] moves;
    boolean willCheck;
-   public int castle;
+   public int kCastle;
+   public int qCastle;
    List<Square> squares;
-   public Move(int[] movesIn, boolean willCheckIn, int inCastle){
+   public Move(int[] movesIn, boolean willCheckIn, int inKCastle, int inQCastle){
        moves = movesIn;
        willCheck = willCheckIn;
-       castle = inCastle;
+       kCastle = inKCastle;
+       qCastle = inQCastle;
    } 
-   public Move(List<Square> squaresIn, boolean willCheckIn, int inCastle){
+   public Move(List<Square> squaresIn, boolean willCheckIn, int inKCastle, int inQCastle){
        squares = squaresIn;
        willCheck = willCheckIn;
-       castle = inCastle;
+       kCastle = inKCastle;
+       qCastle = inQCastle;
    }
    public int[] getMoves(){
     return moves;

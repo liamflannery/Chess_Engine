@@ -14,7 +14,8 @@ public class CheckFinder {
     boolean willCheck;
     Move potentialMove;
     boolean inCheck;
-    public CheckFinder(int[] inPossibleMoves, int[] inBoardPos, List<Piece> enemyPosIn, boolean inInCheck){
+    boolean facingUp;
+    public CheckFinder(int[] inPossibleMoves, int[] inBoardPos, List<Piece> enemyPosIn, boolean inInCheck, boolean inFacingUp){
         enemyPos = new ArrayList<Piece>(enemyPosIn);
         removedEnemy = null;
         possibleMoves = inPossibleMoves;
@@ -23,6 +24,7 @@ public class CheckFinder {
         testMove = new int[64];
         willCheck = false;
         inCheck = inInCheck;
+        facingUp = inFacingUp;
     }
     public int[] findMoves(int pos, int type){    
         for(int j = 0; j < possibleMoves.length; j++){
@@ -31,7 +33,7 @@ public class CheckFinder {
                 testMove[j] = type;
                 testMove[pos] = 0;
                 for(Piece enemy:enemyPos){
-                    potentialMove = moveFinder.findMoves(enemy.posOnBoard, testMove[enemy.posOnBoard], enemy.moved, testMove, inCheck);
+                    potentialMove = moveFinder.findMoves(enemy.posOnBoard, testMove[enemy.posOnBoard], enemy.moved, testMove, inCheck, !facingUp, enemyPos);
                     willCheck = potentialMove.testCheck();
                     
                     if(enemy.posOnBoard == j && willCheck){

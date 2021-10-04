@@ -26,63 +26,30 @@ public class Stage {
         White, Black;
       }
     public Turn currentTurn;
-    public Stage(HashMap<String,Point> inputWhitePos, HashMap<String,Point> inputBlackPos) {
-        currentTurn = Turn.White;
-        initialWhitePosition = inputWhitePos;
-        initialBlackPosition = inputBlackPos;
+    public Stage() {
+        currentTurn = Turn.Black;
+        // initialWhitePosition = inputWhitePos;
+        // initialBlackPosition = inputBlackPos;
         board = new Board();
         whitePieces = new ArrayList<Piece>();
         blackPieces = new ArrayList<Piece>();
-        for(Map.Entry<String, Point> piece: initialWhitePosition.entrySet()){
-            switch(piece.getKey()){
-                case("King"):
-                    whitePieces.add(new King(board.squares[(int)piece.getValue().getY()][(int)piece.getValue().getX()], true));
-                break;
-                case("Queen"):
-                    whitePieces.add(new Queen(board.squares[(int)piece.getValue().getY()][(int)piece.getValue().getX()], true));
-                break;
-                case("Bishop"):
-                    whitePieces.add(new Bishop(board.squares[(int)piece.getValue().getY()][(int)piece.getValue().getX()], true));
-                break;
-                case("Knight"):
-                    whitePieces.add(new Knight(board.squares[(int)piece.getValue().getY()][(int)piece.getValue().getX()], true));
-                break;
-                case("Rook"):
-                    whitePieces.add(new Rook(board.squares[(int)piece.getValue().getY()][(int)piece.getValue().getX()], true));
-                break;
-                case("Pawn"):
-                    whitePieces.add(new Pawn(board.squares[(int)piece.getValue().getY()][(int)piece.getValue().getX()], true));
-                break;
-            }
-        }
-        for(Map.Entry<String, Point> piece: initialBlackPosition.entrySet()){
-            switch(piece.getKey()){
-                case("King"):
-                    blackPieces.add(new King(board.squares[(int)piece.getValue().getY()][(int)piece.getValue().getX()], false));
-                break;
-                case("Queen"):
-                    blackPieces.add(new Queen(board.squares[(int)piece.getValue().getY()][(int)piece.getValue().getX()], false));
-                break;
-                case("Bishop"):
-                    blackPieces.add(new Bishop(board.squares[(int)piece.getValue().getY()][(int)piece.getValue().getX()], false));
-                break;
-                case("Knight"):
-                    blackPieces.add(new Knight(board.squares[(int)piece.getValue().getY()][(int)piece.getValue().getX()], false));
-                break;
-                case("Rook"):
-                    blackPieces.add(new Rook(board.squares[(int)piece.getValue().getY()][(int)piece.getValue().getX()], false));
-                break;
-                case("Pawn"):
-                    blackPieces.add(new Pawn(board.squares[(int)piece.getValue().getY()][(int)piece.getValue().getX()], false));
-                break;
-            }
-        }
+
+        whitePieces.add(new Rook(board.squares[0][0], true));
+        whitePieces.add(new Rook(board.squares[7][0], true));
+        whitePieces.add(new King(board.squares[3][0], true));
+        
+        blackPieces.add(new Rook(board.squares[0][7], false));
+        blackPieces.add(new Rook(board.squares[7][7], false));
+        blackPieces.add(new King(board.squares[3][7], false));
+        
+        
+
         white = new Player(this, whitePieces, blackPieces, Turn.White);
-        black = new Computer(this, blackPieces, whitePieces, Turn.Black);
+        black = new Player(this, blackPieces, whitePieces, Turn.Black);
         check = false;
         
         
-        board.setBoard(whitePieces, blackPieces);
+        board.setBoard(whitePieces, blackPieces, false);
         
     }
 
