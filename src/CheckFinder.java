@@ -30,21 +30,32 @@ public class CheckFinder {
         for(int j = 0; j < possibleMoves.length; j++){
             testMove = boardPos.clone();
             if(possibleMoves[j] > 0){
+                if(testMove[j] != 0){
+                    for(Piece enemy:enemyPos){
+                        if(enemy.posOnBoard == j){
+                            removedEnemy = enemy;
+                            break;
+                        }
+                    }
+                   
+                }
+                enemyPos.remove(removedEnemy);
                 testMove[j] = type;
                 testMove[pos] = 0;
                 for(Piece enemy:enemyPos){
-                    potentialMove = moveFinder.findMoves(enemy.posOnBoard, testMove[enemy.posOnBoard], enemy.moved, testMove, inCheck, !facingUp, enemyPos);
+                    potentialMove = moveFinder.findMoves(enemy.posOnBoard, testMove[enemy.posOnBoard], enemy.moved, testMove, !facingUp, enemyPos);
                     willCheck = potentialMove.testCheck();
-                    
-                    if(enemy.posOnBoard == j && willCheck){
-                        break;
-                    }
                     
                     if(willCheck){
                         possibleMoves[j] = 0;
                         break;
                     }
+                    
                 }
+            }
+            if(removedEnemy != null){
+                enemyPos.add(removedEnemy);
+                removedEnemy = null;
             }
         }
         return possibleMoves;

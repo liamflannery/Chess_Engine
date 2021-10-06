@@ -13,7 +13,7 @@ public class MoveFinder {
     int[][] numSquaresToEdge;
     int[] knightDir;
     boolean willCheck;
-    boolean inCheck;
+    public boolean inCheck;
     Move returnMove;
     int qCastle;
     int kCastle;
@@ -25,11 +25,10 @@ public class MoveFinder {
         willCheck = false;
         computeSquares();        
     }
-    public Move findMoves(int position, int inType, boolean inMoved, int[] inBoardPos, boolean inInCheck, boolean inFacingUp, List<Piece> inMyPieces){
+    public Move findMoves(int position, int inType, boolean inMoved, int[] inBoardPos, boolean inFacingUp, List<Piece> inMyPieces){
         qCastle = -1;
         kCastle = -1;
         myPieces = inMyPieces;
-        inCheck = inInCheck;
         willCheck = false;
         pos = position;
         type = inType;
@@ -214,6 +213,7 @@ public class MoveFinder {
         }
     }
     public void castle(){
+        //System.out.println(inCheck);
         if(!(inCheck)){
             if(!(moved)){
                 for(Piece piece: myPieces){
@@ -240,7 +240,7 @@ public class MoveFinder {
         if(move >= 0 && move < boardPos.length){
             if(boardPos[move] != 0){
                 if(boardPos[move] * type < 0){
-                    if(boardPos[move] * type < 0 && Math.abs(boardPos[move]) == 6){
+                    if(Math.abs(boardPos[move]) == 6){
                         moves[move] = 2;
                         willCheck = true;
                     }

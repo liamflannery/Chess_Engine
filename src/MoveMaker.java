@@ -55,6 +55,7 @@ public class MoveMaker {
             }
         }
         if(thisMove.willCheck){
+            board.moveFinder.inCheck = true;
             System.out.println("check");
             check = true;
             if(noMoves){
@@ -62,6 +63,7 @@ public class MoveMaker {
             }
         }
         else{
+            //board.moveFinder.inCheck = false;
             check = false;
             if(noMoves){
                 System.out.println("stalemate");

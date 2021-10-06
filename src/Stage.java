@@ -34,17 +34,17 @@ public class Stage {
         whitePieces = new ArrayList<Piece>();
         blackPieces = new ArrayList<Piece>();
 
-        whitePieces.add(new Rook(board.squares[0][0], true));
+        whitePieces.add(new Rook(board.squares[7][7], true));
         whitePieces.add(new Rook(board.squares[7][0], true));
         whitePieces.add(new King(board.squares[3][0], true));
         
         blackPieces.add(new Rook(board.squares[0][7], false));
-        blackPieces.add(new Rook(board.squares[7][7], false));
-        blackPieces.add(new King(board.squares[3][7], false));
+        blackPieces.add(new Rook(board.squares[4][7], false));
+        blackPieces.add(new King(board.squares[1][7], false));
         
         
 
-        white = new Player(this, whitePieces, blackPieces, Turn.White);
+        white = new Computer(this, whitePieces, blackPieces, Turn.White);
         black = new Player(this, blackPieces, whitePieces, Turn.Black);
         check = false;
         

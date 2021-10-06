@@ -51,7 +51,7 @@ public class Board {
         possibleMoves = new int[64];
         Move parentMove;
         int pos = convertPos(p);
-        parentMove = moveFinder.findMoves(pos, pieceToByte(p), p.moved, boardPos, inCheck, facingUp, myPieces);
+        parentMove = moveFinder.findMoves(pos, pieceToByte(p), p.moved, boardPos, facingUp, myPieces);
         possibleMoves = parentMove.getMoves();
         willCheck = parentMove.willCheck;
         CheckFinder checkFinder;
@@ -97,12 +97,14 @@ public class Board {
                 value =  1;
                 break;
         }
-        if(p.isWhite){
+        if(p.isWhite && !(whitePos.contains(p))){
             whitePos.add(p);
         }
-        else{
-            value = value * -1;
+        if(!(p.isWhite) && !(blackPos.contains(p))){
             blackPos.add(p);
+        }
+        if(!(p.isWhite)){
+            value = value * -1;
         }
         p.posOnBoard = convertPos(p);
         return value;
