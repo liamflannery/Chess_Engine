@@ -9,7 +9,6 @@ public class MoveMaker {
     }
     
     public void move(Square moveTo, Piece pieceToMove, List<Piece> opPieces, List<Piece> myPieces, Board board, boolean check, int kCastle, int qCastle){
-        System.out.println("pos on board: " + moveTo.posOnBoard());
         if(kCastle < 0 && qCastle < 0 || !(castleMoves.contains(moveTo.posOnBoard()))){
             if(moveTo.piece != null){
                 Piece killPiece = moveTo.piece;
@@ -23,7 +22,6 @@ public class MoveMaker {
         else{
             Piece moveRook;
             int row;
-            System.out.println(kCastle + ", " + qCastle);
             if(moveTo.col == 'B'){
                 moveRook = myPieces.get(kCastle);
                 row = pieceToMove.loc.boardRow - 1;

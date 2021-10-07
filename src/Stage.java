@@ -35,43 +35,43 @@ public class Stage {
         whitePieces = new ArrayList<Piece>();
         blackPieces = new ArrayList<Piece>();
 
-        whitePieces.add(new Rook(board.squares[7][0], true));
-     //   whitePieces.add(new Knight(board.squares[6][0], true));
-       // whitePieces.add(new Bishop(board.squares[5][0], true));
-      //  whitePieces.add(new Queen(board.squares[4][0], true));
-        whitePieces.add(new King(board.squares[3][0], true));
-      //  whitePieces.add(new Bishop(board.squares[2][0], true));
-      //  whitePieces.add(new Knight(board.squares[1][0], true));
-        whitePieces.add(new Rook(board.squares[0][0], true));
-        // whitePieces.add(new Pawn(board.squares[7][1], true));
-        // whitePieces.add(new Pawn(board.squares[6][1], true));
-        // whitePieces.add(new Pawn(board.squares[5][1], true));
-        // whitePieces.add(new Pawn(board.squares[4][1], true));
-        // whitePieces.add(new Pawn(board.squares[3][1], true));
-        // whitePieces.add(new Pawn(board.squares[2][1], true));
-        // whitePieces.add(new Pawn(board.squares[1][1], true));
-        // whitePieces.add(new Pawn(board.squares[0][1], true));
+       whitePieces.add(new Rook(board.squares[7][0], true));
+       whitePieces.add(new Knight(board.squares[6][0], true));
+       whitePieces.add(new Bishop(board.squares[5][0], true));
+       whitePieces.add(new Queen(board.squares[4][0], true));
+       whitePieces.add(new King(board.squares[3][0], true));
+       whitePieces.add(new Bishop(board.squares[2][0], true));
+       whitePieces.add(new Knight(board.squares[1][0], true));
+       whitePieces.add(new Rook(board.squares[0][0], true));
+        whitePieces.add(new Pawn(board.squares[7][1], true));
+        whitePieces.add(new Pawn(board.squares[6][1], true));
+        whitePieces.add(new Pawn(board.squares[5][1], true));
+        whitePieces.add(new Pawn(board.squares[4][1], true));
+        whitePieces.add(new Pawn(board.squares[3][1], true));
+        whitePieces.add(new Pawn(board.squares[2][1], true));
+        whitePieces.add(new Pawn(board.squares[1][1], true));
+        whitePieces.add(new Pawn(board.squares[0][1], true));
         
-     //   blackPieces.add(new Rook(board.squares[7][7], false));
-     //   blackPieces.add(new Knight(board.squares[6][7], false));
-     //   blackPieces.add(new Bishop(board.squares[5][7], false));
-        blackPieces.add(new Queen(board.squares[4][7], false));
-        blackPieces.add(new King(board.squares[3][7], false));
-     //   blackPieces.add(new Bishop(board.squares[2][7], false));
-      //  blackPieces.add(new Knight(board.squares[1][7], false));
-   //     blackPieces.add(new Rook(board.squares[0][7], false));
-        // blackPieces.add(new Pawn(board.squares[7][6], false));
-        // blackPieces.add(new Pawn(board.squares[6][6], false));
-        // blackPieces.add(new Pawn(board.squares[5][6], false));
-        // blackPieces.add(new Pawn(board.squares[4][6], false));
-        // blackPieces.add(new Pawn(board.squares[3][6], false));
-        // blackPieces.add(new Pawn(board.squares[2][6], false));
-        // blackPieces.add(new Pawn(board.squares[1][6], false));
-        // blackPieces.add(new Pawn(board.squares[0][6], false));
+       blackPieces.add(new Rook(board.squares[7][7], false));
+       blackPieces.add(new Knight(board.squares[6][7], false));
+       blackPieces.add(new Bishop(board.squares[5][7], false));
+       blackPieces.add(new Queen(board.squares[4][7], false));
+       blackPieces.add(new King(board.squares[3][7], false));
+       blackPieces.add(new Bishop(board.squares[2][7], false));
+       blackPieces.add(new Knight(board.squares[1][7], false));
+       blackPieces.add(new Rook(board.squares[0][7], false));
+        blackPieces.add(new Pawn(board.squares[7][6], false));
+        blackPieces.add(new Pawn(board.squares[6][6], false));
+        blackPieces.add(new Pawn(board.squares[5][6], false));
+        blackPieces.add(new Pawn(board.squares[4][6], false));
+        blackPieces.add(new Pawn(board.squares[3][6], false));
+        blackPieces.add(new Pawn(board.squares[2][6], false));
+        blackPieces.add(new Pawn(board.squares[1][6], false));
+        blackPieces.add(new Pawn(board.squares[0][6], false));
         
         
 
-        white = new Player(this, whitePieces, blackPieces, Turn.White);
+        white = new Computer(this, whitePieces, blackPieces, Turn.White, 1);
         black = new Player(this, blackPieces, whitePieces, Turn.Black);
         check = false;
         

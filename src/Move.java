@@ -7,6 +7,7 @@ public class Move {
    public int qCastle;
    boolean willStopKC;
    boolean willStopQC;
+   public Piece piece;
    List<Square> squares;
    public Move(int[] movesIn, boolean willCheckIn, int inKCastle, int inQCastle, boolean inKC, boolean inQC){
        moves = movesIn;
@@ -24,6 +25,7 @@ public class Move {
        willStopKC = inKC;
        willStopQC = inQC;
    }
+   
    public int[] getMoves(){
     return moves;
    }

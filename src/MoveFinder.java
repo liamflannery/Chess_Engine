@@ -30,6 +30,8 @@ public class MoveFinder {
         directionIndex = new int[]{8,-8,-1,1,7,-7,9,-9};
         knightDir = new int[]{-17,-15,-10,-6,6,10,15,17};
         willCheck = false;
+        willStopKC = false;
+        willStopQC = false;
         computeSquares();        
     }
     public Move findMoves(int position, int inType, boolean inMoved, int[] inBoardPos, boolean inFacingUp, List<Piece> inMyPieces){
@@ -296,13 +298,11 @@ public class MoveFinder {
                         willStopKC = true;
                     }
                     if(attackCastle(4, 2).contains(move)){
-                        System.out.println(type + " " + move + " QC");
                         willStopQC = true;
                     }
                 }
                 if(Math.abs(boardPos[3]) == 6){
                     if(attackCastle(3, 3).contains(move)){
-                        System.out.println(type + " " + move + " QC");
                         willStopQC = true;
                     }
                     if(attackCastle(3, 2).contains(move)){
