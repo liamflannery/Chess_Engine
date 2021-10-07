@@ -12,12 +12,26 @@ public class Computer extends Competitor {
     }
     @Override
     public Stage.Turn move(int x, int y){
+        
         Random rand = new Random();
         pieceToMove = myPieces.get(rand.nextInt(myPieces.size()));
-        rand = new Random();
+        Random rand2 = new Random();
         move = board.legalMoves(pieceToMove, check, myPieces);
-        moveMaker.move(move.squares.get(rand.nextInt(move.squares.size())), pieceToMove, opPieces, myPieces, board, check, move.kCastle, move.qCastle);
+        while(move.squares.size() == 0) {
+            pieceToMove = myPieces.get(rand.nextInt(myPieces.size()));
+            move = board.legalMoves(pieceToMove, check, myPieces);
+        }
+
+        
+        try{
+            moveMaker.move(move.squares.get(rand2.nextInt(move.squares.size())), pieceToMove, opPieces, myPieces, board, check, move.kCastle, move.qCastle);
+        }
+        catch(IllegalArgumentException e){
+            System.out.println(move.squares.toString());
+        }
+        
         unSelectPieces();
+       
         return opTurn;
     }
 

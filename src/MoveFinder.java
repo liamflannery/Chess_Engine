@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -14,11 +15,17 @@ public class MoveFinder {
     int[] knightDir;
     boolean willCheck;
     public boolean inCheck;
+    public boolean cantKC;
+    public boolean cantQC;
     Move returnMove;
     int qCastle;
     int kCastle;
     boolean facingUp;
     List<Piece> myPieces;
+    List<Integer> bottomCastleSquares;
+    List<Integer> topCastleSquares;
+    boolean willStopKC;
+    boolean willStopQC;
     public MoveFinder(){
         directionIndex = new int[]{8,-8,-1,1,7,-7,9,-9};
         knightDir = new int[]{-17,-15,-10,-6,6,10,15,17};
@@ -36,6 +43,9 @@ public class MoveFinder {
         boardPos = inBoardPos;
         moves = new int[64];
         facingUp = inFacingUp;
+        willStopKC = false;
+        willStopQC = false;
+
        switch(type){
             case(-1):
                 if(facingUp){
@@ -69,8 +79,8 @@ public class MoveFinder {
                 castle();
                 break;
             case(-6):
-                castle();
                 singleMoves(0, 8);
+                castle();
                 break;
             case(5):
                 slidingMoves(0, 8);
@@ -99,7 +109,7 @@ public class MoveFinder {
             default:
                 Arrays.fill(moves, 1);
         }
-        returnMove = new Move(moves, willCheck, kCastle, qCastle);
+        returnMove = new Move(moves, willCheck, kCastle, qCastle, willStopKC, willStopQC);
         return returnMove;
     }
     public void singleMoves(int direction, int directionEnd){
@@ -213,22 +223,31 @@ public class MoveFinder {
         }
     }
     public void castle(){
-        //System.out.println(inCheck);
         if(!(inCheck)){
             if(!(moved)){
                 for(Piece piece: myPieces){
                     if(piece.getClass().getName().equals("Rook")){
                         if(!(piece.moved)){
-                            if(piece.loc.col == 'A'){
-                                kCastle = myPieces.indexOf(piece);
-                                move = pos -2;
-                                vetMove();
+                            int difference = pos - piece.posOnBoard;
+                            difference = Math.abs(difference);
+                            if(piece.loc.col == 'A'){   
+                                if((difference == 3 & !cantKC) || (difference == 4 && !cantQC)){
+                                    if(canCastle(pos, 2)){
+                                        kCastle = myPieces.indexOf(piece);
+                                        move = pos -2;
+                                        vetMove();
+                                    }
+                                }                           
+                                                               
                             }
                             if(piece.loc.col == 'H'){
-                                qCastle = myPieces.indexOf(piece);
-                                move = pos + 2;
-                                vetMove();
-                                //break;
+                                if((difference == 3 & !cantKC) || (difference == 4 && !cantQC)){
+                                    if(canCastle(pos, 3)){
+                                        qCastle = myPieces.indexOf(piece);
+                                        move = pos + 2;
+                                        vetMove();
+                                    }
+                                }
                             }
                         }
                     }
@@ -253,7 +272,80 @@ public class MoveFinder {
             else{
                 moves[move] = 1;
             }
+            if(facingUp){
+                if(Math.abs(boardPos[60]) == 6){
+                    if(attackCastle(60, 3).contains(move)){
+                        willStopKC = true;
+                    }
+                    if(attackCastle(60, 2).contains(move)){
+                        willStopQC = true;
+                    }
+                }
+                if(Math.abs(boardPos[59]) == 6){
+                    if(attackCastle(59, 3).contains(move)){
+                        willStopQC = true;
+                    }
+                    if(attackCastle(59, 2).contains(move)){
+                        willStopKC = true;
+                    }
+                }
+            }
+            else{
+                if(Math.abs(boardPos[4]) == 6){
+                    if(attackCastle(4, 3).contains(move)){
+                        willStopKC = true;
+                    }
+                    if(attackCastle(4, 2).contains(move)){
+                        System.out.println(type + " " + move + " QC");
+                        willStopQC = true;
+                    }
+                }
+                if(Math.abs(boardPos[3]) == 6){
+                    if(attackCastle(3, 3).contains(move)){
+                        System.out.println(type + " " + move + " QC");
+                        willStopQC = true;
+                    }
+                    if(attackCastle(3, 2).contains(move)){
+                        willStopKC = true;
+                    }
+                }
+            }
     }
+    }
+    public boolean canCastle(int inPos, int direction){
+        boolean returnValue = true;
+        for(int i = 1; i < numSquaresToEdge[inPos][direction]; i++){
+            if(direction == 2){
+                if(boardPos[pos - i] != 0){
+                    returnValue = false;
+                    break;
+                }
+            }
+            else{
+                if(boardPos[pos + i] != 0){
+                    returnValue = false;
+                    break;
+                }
+            }
+            
+        }
+        return returnValue;
+    }
+    public List<Integer> attackCastle(int kingPos, int direction){
+        List<Integer> returnValue = new ArrayList<Integer>();
+        for(int i = 1; i < numSquaresToEdge[kingPos][direction]; i++){
+            if(direction == 2){
+                if(boardPos[kingPos - i] != 0){
+                    returnValue.add(pos-i);
+                }
+            }
+            else{
+                if(boardPos[kingPos + i] != 0){
+                    returnValue.add(pos+i);
+                }
+            }
+        }
+        return returnValue;
     }
     public void computeSquares(){
         numSquaresToEdge = new int[64][];

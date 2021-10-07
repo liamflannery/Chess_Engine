@@ -20,6 +20,8 @@ public class Board {
     boolean isWhite;
     boolean willCheck;
     boolean whiteAtBottom;
+    boolean cantKC;
+    boolean cantQC;
     public Board(){
         for(int i = 0; i < squares.length; i++) {
             for(int j = 0; j < squares[i].length; j++) {
@@ -54,6 +56,8 @@ public class Board {
         parentMove = moveFinder.findMoves(pos, pieceToByte(p), p.moved, boardPos, facingUp, myPieces);
         possibleMoves = parentMove.getMoves();
         willCheck = parentMove.willCheck;
+        cantKC = parentMove.willStopKC;
+        cantQC = parentMove.willStopQC;
         CheckFinder checkFinder;
         if(p.isWhite){
             checkFinder = new CheckFinder(possibleMoves, boardPos, blackPos, inCheck, facingUp);
@@ -71,11 +75,11 @@ public class Board {
                 squares[i%8][7-i/8].setColor(new Color(91, 230, 255));
             } 
         }
-        Move moveSquare = new Move(moves, willCheck, moveFinder.kCastle ,moveFinder.qCastle);
+        Move moveSquare = new Move(moves, willCheck, moveFinder.kCastle ,moveFinder.qCastle, cantKC, cantQC);
         return moveSquare;
     }
     
-    private int pieceToByte(Piece p){
+    public int pieceToByte(Piece p){
         int value = 0;
         switch(p.getClass().getName()){
             case("King"):

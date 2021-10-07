@@ -67,5 +67,11 @@ public class Square extends Rectangle{
     public Point getPos(){
         return new Point(boardRow, boardColumn);
     }
+    public int posOnBoard(){
+        int pos = 0;
+        pos += numCol;
+        pos += (row - 1) * 8;
+        return pos;
+    }
     
 }

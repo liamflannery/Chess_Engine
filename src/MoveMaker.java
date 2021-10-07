@@ -1,11 +1,16 @@
+import java.util.Arrays;
 import java.util.List;
 
 public class MoveMaker {
     Move thisMove;
+    List<Integer> castleMoves;
+    public MoveMaker(){
+         castleMoves = Arrays.asList(5,1,6,2,61,57,62,58);
+    }
     
     public void move(Square moveTo, Piece pieceToMove, List<Piece> opPieces, List<Piece> myPieces, Board board, boolean check, int kCastle, int qCastle){
-
-        if(kCastle < 0 && qCastle < 0){
+        System.out.println("pos on board: " + moveTo.posOnBoard());
+        if(kCastle < 0 && qCastle < 0 || !(castleMoves.contains(moveTo.posOnBoard()))){
             if(moveTo.piece != null){
                 Piece killPiece = moveTo.piece;
                 killPiece.loc.piece = null;
@@ -53,6 +58,18 @@ public class MoveMaker {
                     break;
                 }
             }
+        }
+        if(thisMove.willStopKC){
+            board.moveFinder.cantKC = true;
+        }
+        else{
+            board.moveFinder.cantKC = false;
+        }
+        if(thisMove.willStopQC){
+            board.moveFinder.cantQC = true;
+        }
+        else{
+            board.moveFinder.cantKC = false;
         }
         if(thisMove.willCheck){
             board.moveFinder.inCheck = true;
