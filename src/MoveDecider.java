@@ -12,7 +12,7 @@ public class MoveDecider {
     int currentScore;
     Move returnMove; 
 
-    public Move findBestMove(Board board, boolean check, List<Piece> myPieces, int depth){
+    public Move findBestMove(Board board, boolean check, List<Piece> myPieces){
         if(myPieces.get(0).isWhite){
             bestScore = Integer.MIN_VALUE;
         }
@@ -22,7 +22,7 @@ public class MoveDecider {
         
         returnMove = board.legalMoves(myPieces.get(0), check, myPieces);
         returnMove.piece = myPieces.get(0);
-        if(depth > 0){
+        
             for(Piece piece: myPieces){
                 currentMove = board.legalMoves(piece, check, myPieces);
                 
@@ -32,20 +32,19 @@ public class MoveDecider {
                     boardPos[moveTo.posOnBoard()] = board.pieceToByte(piece);
                     boardPos[piece.posOnBoard] = 0;
                     currentScore = boardScore(boardPos);
+                    // System.out.println("Looking at " + piece.toString() + " going to " + moveTo.posOnBoard() + " where the score will be: " + currentScore);
+                    // System.out.println("Board should be: " + Arrays.toString(boardPos));
                         if(((currentScore > bestScore) && piece.isWhite) || ((currentScore < bestScore) && !(piece.isWhite))){
                             bestScore = currentScore;
                             returnMove = new Move(new ArrayList<Square>(currentMove.squares), currentMove.willCheck,currentMove.kCastle, currentMove.qCastle, currentMove.willStopKC, currentMove.willStopQC);
                             returnMove.squares.clear();
                             returnMove.squares.add(moveTo);
                             returnMove.piece = piece;
-                            System.out.println(currentMove.squares.toString());
                         }
                     }
-                }
-        }
-        System.out.println(returnMove.squares);               
+                }              
         return returnMove;
-        }
+    }
         
 
     public int boardScore(int[] boardPosIn){
@@ -53,7 +52,7 @@ public class MoveDecider {
         int value = 0;
         
         for(int i = 0; i < boardPosIn.length; i++){
-            switch(boardPosIn[i]){
+            switch(Math.abs(boardPosIn[i])){
                 case(1):
                     value = 1;
                 break;
@@ -76,7 +75,6 @@ public class MoveDecider {
             returnScore = returnScore + value;
             value = 0;
         }
-        System.out.println(returnScore);
         return returnScore;
     }
         

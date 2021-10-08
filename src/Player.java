@@ -74,6 +74,7 @@ public class Player extends Competitor{
     }
     public void normalMove(){
         moveMaker.move(underMouseS.get(), selectedPiece, opPieces, myPieces, board, check, thisMove.kCastle, thisMove.qCastle);
+        System.out.println("~PLAYER MADE MOVE~");
     }
     
     

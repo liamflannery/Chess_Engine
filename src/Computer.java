@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
@@ -17,7 +18,15 @@ public class Computer extends Competitor {
     @Override
     public Stage.Turn move(int x, int y){
     
-        move = moveDecider.findBestMove(board, check, myPieces, depth);
+        
+        List<Piece> simMyPieces = new ArrayList<Piece>(myPieces);
+        List<Piece> simOpPieces = new ArrayList<Piece>(opPieces);
+        Board simBoard = new Board();
+        simBoard.setBoard(simMyPieces, simOpPieces, board.whiteAtBottom);
+        Move simMove = moveDecider.findBestMove(simBoard, check, simMyPieces);
+        //moveMaker.move(move.squares.get(0), move.piece, simOpPieces, simMyPieces, simBoard, check, move.kCastle, move.qCastle);
+
+        move = moveDecider.findBestMove(board, check, myPieces);
         
         try{
             moveMaker.move(move.squares.get(0), move.piece, opPieces, myPieces, board, check, move.kCastle, move.qCastle);
