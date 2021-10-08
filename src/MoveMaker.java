@@ -10,11 +10,16 @@ public class MoveMaker {
     
     public void move(Square moveTo, Piece pieceToMove, List<Piece> opPieces, List<Piece> myPieces, Board board, boolean check, int kCastle, int qCastle){
         if(kCastle < 0 && qCastle < 0 || !(castleMoves.contains(moveTo.posOnBoard()))){
-            if(moveTo.piece != null){
+            if(moveTo.piece != null && moveTo.piece.isWhite != pieceToMove.isWhite){
                 Piece killPiece = moveTo.piece;
                 killPiece.loc.piece = null;
                 killPiece.loc = null;
-                opPieces.remove(killPiece);
+                for(Piece p: opPieces){
+                    if(p.posOnBoard == moveTo.piece.posOnBoard){
+                        opPieces.remove(p);
+                        break;
+                    }
+                }
             }
             pieceToMove.setLoc(moveTo);
             pieceToMove.moved = true;

@@ -32,9 +32,18 @@ public class Computer extends Competitor {
         // System.out.println(simMove.squares.toString());
         // moveMaker.move(simMove.squares.get(0), simMove.piece, simOpPieces, simMyPieces, simBoard, check, simMove.kCastle, simMove.qCastle);
         // System.out.println(Arrays.toString(simBoard.boardPos));
-        move = moveDecider.findBestMove(board, check, myPieces);
+        boolean isWhite;
+        if(myPieces.get(0).isWhite){
+            isWhite = true;
+        }
+        else{
+            isWhite = false;
+        }
+        moveDecider = new MoveDecider();
+        move = moveDecider.findBestMove(board, depth, isWhite);
         
         try{
+            moveMaker = new MoveMaker();
             moveMaker.move(move.squares.get(0), move.piece, opPieces, myPieces, board, check, move.kCastle, move.qCastle);
         }
         catch(IllegalArgumentException e){

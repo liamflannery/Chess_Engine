@@ -12,60 +12,135 @@ public class MoveDecider {
     int[] boardPos;
     int currentScore;
     Move returnMove; 
-
-    public Move findBestMove(Board board, boolean check, List<Piece> myPieces){
-        if(myPieces.get(0).isWhite){
-            bestScore = Integer.MIN_VALUE;
+    BoardDuplicator boardDuplicator;
+    MoveMaker moveMaker;
+    public MoveDecider(){
+        boardDuplicator = new BoardDuplicator();
+        moveMaker = new MoveMaker();
+    }
+    public Move findBestMove(Board board, int depth, boolean isWhite){
+        if(returnMove == null){
+            List<Piece> myPieces;
+            if(isWhite){
+                myPieces = board.whitePos;
+            }
+            else{
+                myPieces = board.blackPos;
+            }
+            Random rand = new Random();
+            Piece randomPiece = myPieces.get(rand.nextInt(myPieces.size()));
+            returnMove = board.legalMoves(randomPiece, board.willCheck, myPieces);
+            boardPos = board.boardPos.clone();
+            while(returnMove.squares.size() < 1){
+                randomPiece = myPieces.get(rand.nextInt(myPieces.size()));
+                returnMove = board.legalMoves(randomPiece, board.willCheck, myPieces);
+            }
+            Square storeSquare = returnMove.squares.get(0);
+            returnMove.squares.clear();
+            returnMove.squares.add(storeSquare);
+            returnMove.piece = randomPiece;
+            boardPos[returnMove.squares.get(0).posOnBoard()] = board.pieceToByte(randomPiece);
+            boardPos[randomPiece.posOnBoard] = 0;
+            returnMove.score = boardScore(board.boardPos);
         }
-        else{
-            bestScore = Integer.MAX_VALUE;
+        if(depth == 0){
+            if(returnMove.piece.isWhite == isWhite){
+                return returnMove;
+            }
+            else{
+                List<Piece> myPieces;
+                if(isWhite){
+                    myPieces = board.whitePos;
+                }
+                else{
+                    myPieces = board.blackPos;
+                }
+                Random rand = new Random();
+                Piece randomPiece = myPieces.get(rand.nextInt(myPieces.size()));
+                Move newReturnMove = board.legalMoves(randomPiece, board.willCheck, myPieces);
+                boardPos = board.boardPos.clone();
+                while(newReturnMove.squares.size() < 1){
+                    randomPiece = myPieces.get(rand.nextInt(myPieces.size()));
+                    newReturnMove = board.legalMoves(randomPiece, board.willCheck, myPieces);
+                }
+                Square storeSquare = newReturnMove.squares.get(0);
+                newReturnMove.squares.clear();
+                newReturnMove.squares.add(storeSquare);
+                newReturnMove.piece = randomPiece;
+                boardPos[newReturnMove.squares.get(0).posOnBoard()] = board.pieceToByte(randomPiece);
+                boardPos[randomPiece.posOnBoard] = 0;
+                newReturnMove.score = boardScore(board.boardPos);
+                return newReturnMove;
+            }
+            
         }
-        Random rand = new Random();
-        Piece randomPiece = myPieces.get(rand.nextInt(myPieces.size()));
-        returnMove = board.legalMoves(randomPiece, check, myPieces);
-        boardPos = board.boardPos.clone();
-        while(returnMove.squares.size() < 1){
-            randomPiece = myPieces.get(rand.nextInt(myPieces.size()));
-            returnMove = board.legalMoves(randomPiece, check, myPieces);
-        }
-        Square storeSquare = returnMove.squares.get(0);
-        returnMove.squares.clear();
-        returnMove.squares.add(storeSquare);
-        returnMove.piece = randomPiece;
-        boardPos[returnMove.squares.get(0).posOnBoard()] = board.pieceToByte(randomPiece);
-        boardPos[randomPiece.posOnBoard] = 0;
-        bestScore = boardScore(boardPos);
-        System.out.println(randomPiece.toString() + returnMove.squares.toString());
-            for(Piece piece: myPieces){
-                currentMove = board.legalMoves(piece, check, myPieces);
-                
-                
-                for(Square moveTo : currentMove.squares){
-                    boardPos = board.boardPos.clone();
-                    boardPos[moveTo.posOnBoard()] = board.pieceToByte(piece);
-                    boardPos[piece.posOnBoard] = 0;
-                    currentScore = boardScore(boardPos);
-                    // System.out.println("Looking at " + piece.toString() + " going to " + moveTo.posOnBoard() + " where the score will be: " + currentScore);
-                    // System.out.println("Board should be: " + Arrays.toString(boardPos));
-                        if(((currentScore > bestScore) && piece.isWhite) || ((currentScore < bestScore) && !(piece.isWhite))){
-                            bestScore = currentScore;
-                            returnMove = new Move(new ArrayList<Square>(currentMove.squares), currentMove.willCheck,currentMove.kCastle, currentMove.qCastle, currentMove.willStopKC, currentMove.willStopQC);
-                            returnMove.squares.clear();
-                            returnMove.squares.add(moveTo);
-                            returnMove.piece = piece;
+        if(isWhite){
+            int maxEval = Integer.MAX_VALUE;
+            for(Piece p: board.whitePos){
+                currentMove = board.legalMoves(p, board.willCheck, board.whitePos);
+                if(currentMove.squares.size() > 0){
+                    for(Square moveTo: currentMove.squares){
+                        Board testBoard = boardDuplicator.duplicatePieces(board);
+                        Piece pieceToMove;
+                        pieceToMove = p;
+                        for(Piece currentPiece: testBoard.whitePos){
+                            if(currentPiece.posOnBoard == p.posOnBoard){
+                                pieceToMove = currentPiece;
+                                break;
+                            }
+                        }
+                        moveMaker.move(moveTo, pieceToMove, testBoard.blackPos, testBoard.whitePos, testBoard, testBoard.moveFinder.inCheck, currentMove.kCastle, currentMove.qCastle);
+                        Move testMove = new Move(new ArrayList<Square>(currentMove.squares), currentMove.willCheck,currentMove.kCastle, currentMove.qCastle, currentMove.willStopKC, currentMove.willStopQC);
+                        testMove.squares.clear();
+                        testMove.squares.add(moveTo);
+                        testMove.piece = p;
+                        int newDepth = depth - 1;
+                        testMove.score = findBestMove(testBoard, newDepth, !isWhite).score;
+                        if(testMove.score > returnMove.score){
+                            returnMove = testMove;
                         }
                     }
-                }              
+                }
+            } 
+        }
+    
+        else{
+            int minEval = Integer.MIN_VALUE;
+            for(Piece p: board.blackPos){
+                currentMove = board.legalMoves(p, board.willCheck, board.blackPos);
+                if(currentMove.squares.size() > 0){
+                    for(Square moveTo: currentMove.squares){
+                        Board testBoard = boardDuplicator.duplicatePieces(board);
+                        Piece pieceToMove;
+                        pieceToMove = p;
+                        for(Piece currentPiece: testBoard.blackPos){
+                            if(currentPiece.posOnBoard == p.posOnBoard){
+                                pieceToMove = currentPiece;
+                                break;
+                            }
+                        }
+                        moveMaker.move(moveTo, pieceToMove, testBoard.whitePos, testBoard.blackPos, testBoard, testBoard.moveFinder.inCheck, currentMove.kCastle, currentMove.qCastle);
+                        Move testMove = new Move(new ArrayList<Square>(currentMove.squares), currentMove.willCheck,currentMove.kCastle, currentMove.qCastle, currentMove.willStopKC, currentMove.willStopQC);
+                        testMove.squares.clear();
+                        testMove.squares.add(moveTo);
+                        testMove.piece = p;
+                        int newDepth = depth - 1;
+                        testMove.score = findBestMove(testBoard, newDepth, !isWhite).score;
+                        if(testMove.score < returnMove.score){
+                            returnMove = testMove;
+                        }
+                    }
+                }
+            } 
+        }
         return returnMove;
     }
-        
-
     public int boardScore(int[] boardPosIn){
         int returnScore = 0;
         int value = 0;
         
         for(int i = 0; i < boardPosIn.length; i++){
-            switch(Math.abs(boardPosIn[i])){
+            switch(boardPosIn[i]){
                 case(1):
                     value = 1;
                 break;
@@ -90,6 +165,5 @@ public class MoveDecider {
         }
         return returnScore;
     }
-        
 }
     

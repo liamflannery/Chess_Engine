@@ -69,7 +69,12 @@ public class Stage {
         blackPieces.add(new Pawn(board.squares[1][6], false));
         blackPieces.add(new Pawn(board.squares[0][6], false));
         
-        
+        for(Piece p: whitePieces){
+            p.loc.piece = p;
+        }
+        for(Piece p: blackPieces){
+            p.loc.piece = p;
+        }
 
         white = new Computer(this, whitePieces, blackPieces, Turn.White, 1);
         black = new Computer(this, blackPieces, whitePieces, Turn.Black, 1);
