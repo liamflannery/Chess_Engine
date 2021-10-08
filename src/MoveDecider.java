@@ -3,6 +3,7 @@ import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Random;
 
 
 public class MoveDecider {
@@ -19,10 +20,22 @@ public class MoveDecider {
         else{
             bestScore = Integer.MAX_VALUE;
         }
-        
-        returnMove = board.legalMoves(myPieces.get(0), check, myPieces);
-        returnMove.piece = myPieces.get(0);
-        
+        Random rand = new Random();
+        Piece randomPiece = myPieces.get(rand.nextInt(myPieces.size()));
+        returnMove = board.legalMoves(randomPiece, check, myPieces);
+        boardPos = board.boardPos.clone();
+        while(returnMove.squares.size() < 1){
+            randomPiece = myPieces.get(rand.nextInt(myPieces.size()));
+            returnMove = board.legalMoves(randomPiece, check, myPieces);
+        }
+        Square storeSquare = returnMove.squares.get(0);
+        returnMove.squares.clear();
+        returnMove.squares.add(storeSquare);
+        returnMove.piece = randomPiece;
+        boardPos[returnMove.squares.get(0).posOnBoard()] = board.pieceToByte(randomPiece);
+        boardPos[randomPiece.posOnBoard] = 0;
+        bestScore = boardScore(boardPos);
+        System.out.println(randomPiece.toString() + returnMove.squares.toString());
             for(Piece piece: myPieces){
                 currentMove = board.legalMoves(piece, check, myPieces);
                 

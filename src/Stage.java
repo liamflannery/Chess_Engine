@@ -72,7 +72,7 @@ public class Stage {
         
 
         white = new Computer(this, whitePieces, blackPieces, Turn.White, 1);
-        black = new Player(this, blackPieces, whitePieces, Turn.Black);
+        black = new Computer(this, blackPieces, whitePieces, Turn.Black, 1);
         check = false;
         
         
@@ -94,16 +94,27 @@ public class Stage {
         if(currentTurn == Turn.Black && black.getClass().getName().equals("Player")){
             black.underMouse(g, mouseLoc);
         }
-        if(currentTurn == Turn.White && white.getClass().getName().equals("Computer")){
+        // if(currentTurn == Turn.White && white.getClass().getName().equals("Computer")){
+        //     currentTurn = white.move(0,0);
+        // }
+        // if(currentTurn == Turn.Black && black.getClass().getName().equals("Computer")){
+        //     currentTurn = black.move(0,0);
+        // }
+        
+        
+        
+        
+    }
+    public int compMove(){
+         if(currentTurn == Turn.White && white.getClass().getName().equals("Computer")){
             currentTurn = white.move(0,0);
+            return 0;
         }
         if(currentTurn == Turn.Black && black.getClass().getName().equals("Computer")){
             currentTurn = black.move(0,0);
+            return 0;
         }
-        
-        
-        
-        
+        return 0;
     }
   
     public void mouseClicked(int x, int y){

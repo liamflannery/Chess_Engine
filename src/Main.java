@@ -41,6 +41,7 @@ class Main extends JFrame {
         @Override
         public void mousePressed(MouseEvent e) {
             stage.mouseClicked(e.getX(), e.getY());
+            stage.compMove();
             
         }
 
