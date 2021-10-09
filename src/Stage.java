@@ -35,39 +35,50 @@ public class Stage {
         whitePieces = new ArrayList<Piece>();
         blackPieces = new ArrayList<Piece>();
 
-       whitePieces.add(new Rook(board.squares[7][0], true));
-       whitePieces.add(new Knight(board.squares[6][0], true));
-       whitePieces.add(new Bishop(board.squares[5][0], true));
-       whitePieces.add(new Queen(board.squares[4][0], true));
-       whitePieces.add(new King(board.squares[3][0], true));
-       whitePieces.add(new Bishop(board.squares[2][0], true));
-       whitePieces.add(new Knight(board.squares[1][0], true));
-       whitePieces.add(new Rook(board.squares[0][0], true));
-        whitePieces.add(new Pawn(board.squares[7][1], true));
-        whitePieces.add(new Pawn(board.squares[6][1], true));
-        whitePieces.add(new Pawn(board.squares[5][1], true));
-        whitePieces.add(new Pawn(board.squares[4][1], true));
-        whitePieces.add(new Pawn(board.squares[3][1], true));
-        whitePieces.add(new Pawn(board.squares[2][1], true));
-        whitePieces.add(new Pawn(board.squares[1][1], true));
-        whitePieces.add(new Pawn(board.squares[0][1], true));
+    //    whitePieces.add(new Rook(board.squares[7][0], true));
+    //    whitePieces.add(new Knight(board.squares[6][0], true));
+    //    whitePieces.add(new Bishop(board.squares[5][0], true));
+    //    whitePieces.add(new Queen(board.squares[4][0], true));
+    //    whitePieces.add(new King(board.squares[3][0], true));
+    //    whitePieces.add(new Bishop(board.squares[2][0], true));
+    //    whitePieces.add(new Knight(board.squares[1][0], true));
+    //    whitePieces.add(new Rook(board.squares[0][0], true));
+    //     whitePieces.add(new Pawn(board.squares[7][1], true));
+    //     whitePieces.add(new Pawn(board.squares[6][1], true));
+    //     whitePieces.add(new Pawn(board.squares[5][1], true));
+    //     whitePieces.add(new Pawn(board.squares[4][1], true));
+    //     whitePieces.add(new Pawn(board.squares[3][1], true));
+    //     whitePieces.add(new Pawn(board.squares[2][1], true));
+    //     whitePieces.add(new Pawn(board.squares[1][1], true));
+    //     whitePieces.add(new Pawn(board.squares[0][1], true));
         
-       blackPieces.add(new Rook(board.squares[7][7], false));
-       blackPieces.add(new Knight(board.squares[6][7], false));
-       blackPieces.add(new Bishop(board.squares[5][7], false));
-       blackPieces.add(new Queen(board.squares[4][7], false));
-       blackPieces.add(new King(board.squares[3][7], false));
-       blackPieces.add(new Bishop(board.squares[2][7], false));
-       blackPieces.add(new Knight(board.squares[1][7], false));
-       blackPieces.add(new Rook(board.squares[0][7], false));
-        blackPieces.add(new Pawn(board.squares[7][6], false));
-        blackPieces.add(new Pawn(board.squares[6][6], false));
-        blackPieces.add(new Pawn(board.squares[5][6], false));
-        blackPieces.add(new Pawn(board.squares[4][6], false));
-        blackPieces.add(new Pawn(board.squares[3][6], false));
-        blackPieces.add(new Pawn(board.squares[2][6], false));
-        blackPieces.add(new Pawn(board.squares[1][6], false));
-        blackPieces.add(new Pawn(board.squares[0][6], false));
+       blackPieces.add(new Rook(board.squares[0][0], false));
+       blackPieces.add(new Queen(board.squares[3][0], false));
+       blackPieces.add(new Bishop(board.squares[4][0], false));
+       blackPieces.add(new Rook(board.squares[6][0], false));
+       blackPieces.add(new King(board.squares[7][0], false));
+       blackPieces.add(new Pawn(board.squares[0][1], false));
+       blackPieces.add(new Pawn(board.squares[1][1], false));
+       blackPieces.add(new Bishop(board.squares[2][1], false));
+       blackPieces.add(new Pawn(board.squares[5][1], false));
+       blackPieces.add(new Pawn(board.squares[7][1], false));
+       blackPieces.add(new Knight(board.squares[2][2], false));
+       blackPieces.add(new Pawn(board.squares[4][2], false));
+       blackPieces.add(new Pawn(board.squares[6][2], false));
+
+       whitePieces.add(new Pawn(board.squares[5][2], true));
+       whitePieces.add(new Bishop(board.squares[0][3], true));
+       whitePieces.add(new Knight(board.squares[4][3], true));
+       whitePieces.add(new Bishop(board.squares[2][4], true));
+       whitePieces.add(new Pawn(board.squares[4][4], true));
+       whitePieces.add(new Queen(board.squares[7][4], true));
+       whitePieces.add(new Pawn(board.squares[2][5], true));
+       whitePieces.add(new Rook(board.squares[5][5], true));
+       whitePieces.add(new Pawn(board.squares[1][6], true));
+       whitePieces.add(new Pawn(board.squares[6][6], true));
+       whitePieces.add(new Pawn(board.squares[7][6], true));
+       whitePieces.add(new King(board.squares[7][7], true));
+    
         
         for(Piece p: whitePieces){
             p.loc.piece = p;
@@ -81,7 +92,7 @@ public class Stage {
         check = false;
         
         
-        board.setBoard(whitePieces, blackPieces, false);
+        board.setBoard(whitePieces, blackPieces, true);
         
     }
 

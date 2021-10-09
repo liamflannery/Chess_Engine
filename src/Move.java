@@ -9,8 +9,10 @@ public class Move {
    boolean willStopQC;
    public Piece piece;
    List<Square> squares;
+   boolean willCheckMate;
    public int score;
    public Move(int[] movesIn, boolean willCheckIn, int inKCastle, int inQCastle, boolean inKC, boolean inQC){
+       willCheckMate = false;
        moves = movesIn;
        willCheck = willCheckIn;
        kCastle = inKCastle;
@@ -19,6 +21,7 @@ public class Move {
        willStopQC = inQC;
    } 
    public Move(List<Square> squaresIn, boolean willCheckIn, int inKCastle, int inQCastle, boolean inKC, boolean inQC){
+       willCheckMate = false;
        squares = squaresIn;
        willCheck = willCheckIn;
        kCastle = inKCastle;

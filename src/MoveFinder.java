@@ -218,9 +218,12 @@ public class MoveFinder {
                 direction = -1;
             }
             move = pos + 16 * direction;
-            if(boardPos[move] == 0 && boardPos[pos + 8 * direction] == 0){
-                vetMove();
+            if(move >= 0 && move < 64){
+                if(boardPos[move] == 0 && boardPos[pos + 8 * direction] == 0){
+                    vetMove();
+                }
             }
+            
             
         }
     }

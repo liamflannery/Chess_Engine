@@ -43,7 +43,7 @@ public class MoveDecider {
             boardPos[randomPiece.posOnBoard] = 0;
             returnMove.score = boardScore(board.boardPos);
         }
-        if(depth == 0){
+        if(depth == 0 || returnMove.willCheckMate){
             if(returnMove.piece.isWhite == isWhite){
                 return returnMove;
             }
@@ -75,7 +75,7 @@ public class MoveDecider {
             
         }
         if(isWhite){
-            int maxEval = Integer.MAX_VALUE;
+    
             for(Piece p: board.whitePos){
                 currentMove = board.legalMoves(p, board.willCheck, board.whitePos);
                 if(currentMove.squares.size() > 0){
@@ -89,7 +89,19 @@ public class MoveDecider {
                                 break;
                             }
                         }
-                        moveMaker.move(moveTo, pieceToMove, testBoard.blackPos, testBoard.whitePos, testBoard, testBoard.moveFinder.inCheck, currentMove.kCastle, currentMove.qCastle);
+                                            
+                        Piece moveToPiece;
+                        
+                        Square moveToClone = new Square(moveTo.col, moveTo.numCol, moveTo.row, moveTo.x, moveTo.y, null, moveTo.boardRow, moveTo.boardColumn);
+                        if(moveTo.piece == null){
+                            moveToPiece = null;
+                        }
+                        else{
+                            moveToPiece = duplicatePiece(moveTo.piece, moveToClone); 
+                            moveToClone.piece = moveToPiece;
+                        }
+                        
+                        moveMaker.move(moveToClone, pieceToMove, testBoard.blackPos, testBoard.whitePos, testBoard, testBoard.moveFinder.inCheck, currentMove.kCastle, currentMove.qCastle);
                         Move testMove = new Move(new ArrayList<Square>(currentMove.squares), currentMove.willCheck,currentMove.kCastle, currentMove.qCastle, currentMove.willStopKC, currentMove.willStopQC);
                         testMove.squares.clear();
                         testMove.squares.add(moveTo);
@@ -105,7 +117,6 @@ public class MoveDecider {
         }
     
         else{
-            int minEval = Integer.MIN_VALUE;
             for(Piece p: board.blackPos){
                 currentMove = board.legalMoves(p, board.willCheck, board.blackPos);
                 if(currentMove.squares.size() > 0){
@@ -114,12 +125,22 @@ public class MoveDecider {
                         Piece pieceToMove;
                         pieceToMove = p;
                         for(Piece currentPiece: testBoard.blackPos){
-                            if(currentPiece.posOnBoard == p.posOnBoard){
+                            if(currentPiece.posOnBoard == p.posOnBoard && currentPiece.isWhite == p.isWhite){
                                 pieceToMove = currentPiece;
                                 break;
                             }
                         }
-                        moveMaker.move(moveTo, pieceToMove, testBoard.whitePos, testBoard.blackPos, testBoard, testBoard.moveFinder.inCheck, currentMove.kCastle, currentMove.qCastle);
+                        Piece moveToPiece;
+                        
+                        Square moveToClone = new Square(moveTo.col, moveTo.numCol, moveTo.row, moveTo.x, moveTo.y, null, moveTo.boardRow, moveTo.boardColumn);
+                        if(moveTo.piece == null){
+                            moveToPiece = null;
+                        }
+                        else{
+                            moveToPiece = duplicatePiece(moveTo.piece, moveToClone); 
+                            moveToClone.piece = moveToPiece;
+                        }
+                        moveMaker.move(moveToClone, pieceToMove, testBoard.whitePos, testBoard.blackPos, testBoard, testBoard.moveFinder.inCheck, currentMove.kCastle, currentMove.qCastle);
                         Move testMove = new Move(new ArrayList<Square>(currentMove.squares), currentMove.willCheck,currentMove.kCastle, currentMove.qCastle, currentMove.willStopKC, currentMove.willStopQC);
                         testMove.squares.clear();
                         testMove.squares.add(moveTo);
@@ -164,6 +185,25 @@ public class MoveDecider {
             value = 0;
         }
         return returnScore;
+    }
+
+    public Piece duplicatePiece(Piece p, Square loc){
+        switch(p.getClass().getName()){
+            case("King"):
+                return new King(loc, p.isWhite);
+            case("Queen"):
+                return new Queen(loc, p.isWhite);
+            case("Rook"):
+                return new Rook(loc, p.isWhite);
+            case("Knight"):
+                return new Knight(loc, p.isWhite);
+            case("Bishop"):
+                return new Bishop(loc, p.isWhite);
+            case("Pawn"):
+                return new Pawn(loc, p.isWhite);
+            default:
+                return null;
+        }
     }
 }
     

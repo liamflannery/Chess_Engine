@@ -21,7 +21,7 @@ class Main extends JFrame {
             this.addMouseListener(this);
                     
           
-             stage = new Stage();
+            stage = new Stage();
         
         }
 

@@ -11,9 +11,6 @@ public class MoveMaker {
     public void move(Square moveTo, Piece pieceToMove, List<Piece> opPieces, List<Piece> myPieces, Board board, boolean check, int kCastle, int qCastle){
         if(kCastle < 0 && qCastle < 0 || !(castleMoves.contains(moveTo.posOnBoard()))){
             if(moveTo.piece != null && moveTo.piece.isWhite != pieceToMove.isWhite){
-                Piece killPiece = moveTo.piece;
-                killPiece.loc.piece = null;
-                killPiece.loc = null;
                 for(Piece p: opPieces){
                     if(p.posOnBoard == moveTo.piece.posOnBoard){
                         opPieces.remove(p);
@@ -23,6 +20,7 @@ public class MoveMaker {
             }
             pieceToMove.setLoc(moveTo);
             pieceToMove.moved = true;
+            pieceToMove.loc.piece = pieceToMove;
         }
         else{
             Piece moveRook;
@@ -44,6 +42,7 @@ public class MoveMaker {
             moveRook.setLoc(rookMoveTo);
             moveRook.moved = true;
             pieceToMove.setLoc(moveTo);
+            pieceToMove.loc.piece = pieceToMove;
             pieceToMove.moved = true;
         }
             board.setBoard(myPieces, opPieces, board.whiteAtBottom);
@@ -79,6 +78,7 @@ public class MoveMaker {
             System.out.println("check");
             check = true;
             if(noMoves){
+                thisMove.willCheckMate = true;
                 System.out.println("checkmate");
             }
         }
